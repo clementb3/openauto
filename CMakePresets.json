@@ -10,10 +10,6 @@
       "installDir": "${sourceDir}/out/install/${presetName}",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
-        "AASDK_INCLUDE_DIRS": "../../aasdk/include",
-        "AASDK_LIBRARIES": "../../aasdk/lib/libaasdk.so",
-        "AASDK_PROTO_INCLUDE_DIRS": "../../aasdk/build",
-        "AASDK_PROTO_LIBRARIES": "../../aasdk/lib/libaasdk_proto.so",
         "NOPI": "TRUE"
       },
       "condition": {

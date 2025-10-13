@@ -8,3 +8,8 @@ CMakeLists.txt.user
 /cmake-build-*/
 .idea/
 /.vs
+/CMakeFiles
+*.txt
+/Makefile
+/cmake_install.cmake
+*_autogen/
