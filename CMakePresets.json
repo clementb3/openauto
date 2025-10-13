@@ -1,0 +1,27 @@
+﻿{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "linux-debug",
+      "displayName": "Linux Debug",
+      "description": "Cibler le WSL (Sous-système Windows pour Linux) ou un système distant.",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "installDir": "${sourceDir}/out/install/${presetName}",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "AASDK_INCLUDE_DIRS": "../../aasdk/include",
+        "AASDK_LIBRARIES": "../../aasdk/lib/libaasdk.so",
+        "AASDK_PROTO_INCLUDE_DIRS": "../../aasdk/build",
+        "AASDK_PROTO_LIBRARIES": "../../aasdk/lib/libaasdk_proto.so",
+        "NOPI": "TRUE"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "vendor": { "microsoft.com/VisualStudioRemoteSettings/CMake/2.0": { "remoteSourceRootDir": "$env{HOME}/.vs/$ms{projectDirName}" } }
+    }
+  ]
+}
