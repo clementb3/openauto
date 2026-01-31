@@ -34,6 +34,8 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 # Paths
+set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_CURRENT_SOURCE_DIR}/autoapp/UI)
+
 set(resources_directory ${CMAKE_CURRENT_SOURCE_DIR}/assets)
 set(sources_directory ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(include_directory ${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -175,3 +177,4 @@ set_target_properties(autoapp
 #        EXPORT aasdkTargets
 #        RUNTIME DESTINATION bin
 #)
+

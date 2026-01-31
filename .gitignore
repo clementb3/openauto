@@ -1,15 +1,6 @@
-# Add any directories, files, or patterns you don't want to be tracked by version control
-lib/
-bin/
-build/
-.vscode/
-openauto.ini
-CMakeLists.txt.user
-/cmake-build-*/
-.idea/
+﻿################################################################################
+# Ce fichier .gitignore a été automatiquement créé par Microsoft(R) Visual Studio.
+################################################################################
+
 /.vs
-/CMakeFiles
-*.txt
-/Makefile
-/cmake_install.cmake
-*_autogen/
+/out

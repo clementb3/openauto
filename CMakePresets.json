@@ -1,23 +1,40 @@
-﻿{
+{
   "version": 3,
   "configurePresets": [
     {
-      "name": "linux-debug",
-      "displayName": "Linux Debug",
-      "description": "Cibler le WSL (Sous-système Windows pour Linux) ou un système distant.",
+      "name": "wsl-debug",
+      "displayName": "WSL GCC Debug",
+      "description": "Configuration pour WSL",
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/out/build/${presetName}",
-      "installDir": "${sourceDir}/out/install/${presetName}",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
-        "NOPI": "TRUE"
+        "NOPI": "ON"
       },
-      "condition": {
-        "type": "equals",
-        "lhs": "${hostSystemName}",
-        "rhs": "Linux"
+      "vendor": {
+        "microsoft.com/VisualStudioSettings/CMake/1.0": {
+          "hostOS": [
+            "Linux"
+          ]
+        }
+      }
+    },
+    {
+      "hidden": true,
+      "name": "Qt",
+      "cacheVariables": {
+        "CMAKE_PREFIX_PATH": "$env{QTDIR}"
       },
-      "vendor": { "microsoft.com/VisualStudioRemoteSettings/CMake/2.0": { "remoteSourceRootDir": "$env{HOME}/.vs/$ms{projectDirName}" } }
+      "vendor": {
+        "qt-project.org/Qt": {
+          "checksum": "wVa86FgEkvdCTVp1/nxvrkaemJc="
+        }
+      }
     }
-  ]
+  ],
+  "vendor": {
+    "qt-project.org/Presets": {
+      "checksum": "bvbzvN57VEFnsLRaPuJXONgmIvc="
+    }
+  }
 }

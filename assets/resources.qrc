@@ -39,5 +39,6 @@
         <file>black.png</file>
         <file>album-hot.png</file>
         <file>Roboto-Regular.ttf</file>
+        <file>heat-hot.png</file>
     </qresource>
 </RCC>

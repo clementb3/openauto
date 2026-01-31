@@ -94,24 +94,9 @@ MainWindow::MainWindow(configuration::IConfiguration::Pointer configuration, QWi
 
     connect(ui_->pushButtonSettings, &QPushButton::clicked, this, &MainWindow::openSettings);
     connect(ui_->pushButtonSettings2, &QPushButton::clicked, this, &MainWindow::openSettings);
-    connect(ui_->pushButtonUpdate, &QPushButton::clicked, this, &MainWindow::openUpdateDialog);
-    connect(ui_->pushButtonExit, &QPushButton::clicked, this, &MainWindow::toggleExit);
-    connect(ui_->pushButtonExit2, &QPushButton::clicked, this, &MainWindow::toggleExit);
-    connect(ui_->pushButtonShutdown, &QPushButton::clicked, this, &MainWindow::exit);
     connect(ui_->pushButtonShutdown2, &QPushButton::clicked, this, &MainWindow::exit);
-    connect(ui_->pushButtonReboot, &QPushButton::clicked, this, &MainWindow::reboot);
     connect(ui_->pushButtonReboot2, &QPushButton::clicked, this, &MainWindow::reboot);
-    connect(ui_->pushButtonCancel, &QPushButton::clicked, this, &MainWindow::toggleExit);
     connect(ui_->pushButtonCancel2, &QPushButton::clicked, this, &MainWindow::toggleExit);
-    connect(ui_->pushButtonDay, &QPushButton::clicked, this, &MainWindow::TriggerScriptDay);
-    connect(ui_->pushButtonDay, &QPushButton::clicked, this, &MainWindow::switchGuiToDay);
-    connect(ui_->pushButtonDay2, &QPushButton::clicked, this, &MainWindow::TriggerScriptDay);
-    connect(ui_->pushButtonDay2, &QPushButton::clicked, this, &MainWindow::switchGuiToDay);
-    connect(ui_->pushButtonNight, &QPushButton::clicked, this, &MainWindow::TriggerScriptNight);
-    connect(ui_->pushButtonNight, &QPushButton::clicked, this, &MainWindow::switchGuiToNight);
-    connect(ui_->pushButtonNight2, &QPushButton::clicked, this, &MainWindow::TriggerScriptNight);
-    connect(ui_->pushButtonNight2, &QPushButton::clicked, this, &MainWindow::switchGuiToNight);
-    connect(ui_->pushButtonBrightness, &QPushButton::clicked, this, &MainWindow::showBrightnessSlider);
     connect(ui_->pushButtonBrightness2, &QPushButton::clicked, this, &MainWindow::showBrightnessSlider);
     connect(ui_->pushButtonVolume, &QPushButton::clicked, this, &MainWindow::showVolumeSlider);
     connect(ui_->pushButtonVolume2, &QPushButton::clicked, this, &MainWindow::showVolumeSlider);
@@ -122,11 +107,9 @@ MainWindow::MainWindow(configuration::IConfiguration::Pointer configuration, QWi
     connect(ui_->pushButtonMute, &QPushButton::clicked, this, &MainWindow::setMute);
     connect(ui_->pushButtonUnMute, &QPushButton::clicked, this, &MainWindow::toggleMuteButton);
     connect(ui_->pushButtonUnMute, &QPushButton::clicked, this, &MainWindow::setUnMute);
-    connect(ui_->pushButtonToggleGUI, &QPushButton::clicked, this, &MainWindow::toggleGUI);
     connect(ui_->pushButtonToggleGUI2, &QPushButton::clicked, this, &MainWindow::toggleGUI);
     connect(ui_->pushButtonWifi, &QPushButton::clicked, this, &MainWindow::openConnectDialog);
     connect(ui_->pushButtonWifi2, &QPushButton::clicked, this, &MainWindow::openConnectDialog);
-    connect(ui_->pushButtonMusic, &QPushButton::clicked, this, &MainWindow::playerShow);
     connect(ui_->pushButtonMusic2, &QPushButton::clicked, this, &MainWindow::playerShow);
     connect(ui_->pushButtonBack, &QPushButton::clicked, this, &MainWindow::playerHide);
     connect(ui_->pushButtonPlayerBack, &QPushButton::clicked, this, &MainWindow::playerHide);
@@ -135,7 +118,6 @@ MainWindow::MainWindow(configuration::IConfiguration::Pointer configuration, QWi
     connect(ui_->pushButtonAndroidAuto2, &QPushButton::clicked, this, &MainWindow::TriggerAppStart);
     connect(ui_->pushButtonAndroidAuto2, &QPushButton::clicked, this, &MainWindow::setRetryUSBConnect);
 
-    ui_->clockOnlyWidget->hide();
 
     ui_->pushButtonBluetooth->hide();
     ui_->labelBluetoothPairable->hide();
@@ -143,15 +125,11 @@ MainWindow::MainWindow(configuration::IConfiguration::Pointer configuration, QWi
     // by default hide media player
     ui_->mediaWidget->hide();
 
-    ui_->SysinfoTopLeft->hide();
 
     ui_->ButtonAndroidAuto->hide();
     ui_->pushButtonAndroidAuto2->hide();
 
-    ui_->SysinfoTopLeft2->hide();
 
-    ui_->pushButtonUpdate->hide();
-    ui_->label_dummy_right->hide();
 
     ui_->dcRecording->hide();
 
@@ -159,47 +137,10 @@ MainWindow::MainWindow(configuration::IConfiguration::Pointer configuration, QWi
         ui_->networkInfo->hide();
     }
 
-    if (!this->devModeEnabled) {
-        ui_->labelLock->hide();
-        ui_->labelLockDummy->hide();
-    }
-
-    if (std::ifstream("/etc/crankshaft.branch")) {
-        QString branch = configuration_->readFileContent("/etc/crankshaft.branch");
-        if (branch != "crankshaft-ng") {
-            if (branch == "csng-dev") {
-                ui_->Header_Label->setText("<html><head/><body><p><span style=' font-style:normal; color:#ffffff;'>crank</span><span style=' font-style:normal; color:#5ce739;'>shaft </span><span style=' font-style:normal; color:#40bfbf;'>NG </span><span style=' font-style:normal; color:#888a85;'>- </span><span style=' font-style:normal; color:#cc0000;'>Dev-Build</span></p></body></html>");
-            } else {
-                ui_->Header_Label->setText("<html><head/><body><p><span style=' font-style:normal; color:#ffffff;'>crank</span><span style=' font-style:normal; color:#5ce739;'>shaft </span><span style=' font-style:normal; color:#40bfbf;'>NG </span><span style=' font-style:normal; color:#888a85;'>- </span><span style=' font-style:normal; color:#ce5c00;'>Custom-Build</span></p></body></html>");
-            }
-        }
-    }
 
     QTimer *timer=new QTimer(this);
     connect(timer, SIGNAL(timeout()),this,SLOT(showTime()));
     timer->start(1000);
-
-    // enable connects while cam is enabled
-    if (this->cameraButtonForce) {
-        connect(ui_->pushButtonCameraShow, &QPushButton::clicked, this, &MainWindow::cameraShow);
-        connect(ui_->pushButtonCameraShow, &QPushButton::clicked, this, &MainWindow::cameraControlShow);
-        connect(ui_->pushButtonCameraShow2, &QPushButton::clicked, this, &MainWindow::cameraShow);
-        connect(ui_->pushButtonCameraShow2, &QPushButton::clicked, this, &MainWindow::cameraControlShow);
-        connect(ui_->pushButtonCameraHide, &QPushButton::clicked, this, &MainWindow::cameraHide);
-        connect(ui_->pushButtonCameraHide, &QPushButton::clicked, this, &MainWindow::cameraControlHide);
-        connect(ui_->pushButtonStop, &QPushButton::clicked, this, &MainWindow::cameraStop);
-        connect(ui_->pushButtonRecord, &QPushButton::clicked, this, &MainWindow::cameraRecord);
-        connect(ui_->pushButtonSave, &QPushButton::clicked, this, &MainWindow::cameraSave);
-        connect(ui_->pushButtonUp, &QPushButton::clicked, this, &MainWindow::cameraPosYUp);
-        connect(ui_->pushButtonDown, &QPushButton::clicked, this, &MainWindow::cameraPosYDown);
-        connect(ui_->pushButtonPlus, &QPushButton::clicked, this, &MainWindow::cameraZoomPlus);
-        connect(ui_->pushButtonMinus, &QPushButton::clicked, this, &MainWindow::cameraZoomMinus);
-        this->camera_ycorection=configuration->getCSValue("RPICAM_YCORRECTION").toInt();
-        this->camera_zoom=configuration->getCSValue("RPICAM_ZOOM").toInt();
-    } else {
-        ui_->pushButtonCameraShow->hide();
-        ui_->pushButtonCameraShow2->hide();
-    }
 
     // show debug button if enabled
     if (!this->systemDebugmode) {
@@ -207,7 +148,6 @@ MainWindow::MainWindow(configuration::IConfiguration::Pointer configuration, QWi
         ui_->pushButtonDebug2->hide();
     }
 
-    ui_->pushButtonLock->hide();
     ui_->pushButtonLock2->hide();
 
     ui_->btDevice->hide();
@@ -228,7 +168,6 @@ MainWindow::MainWindow(configuration::IConfiguration::Pointer configuration, QWi
     // hide brightness slider of control file is not existing
     QFileInfo brightnessFile(brightnessFilename);
     if (!brightnessFile.exists() && !this->brightnessButtonForce) {
-        ui_->pushButtonBrightness->hide();
         ui_->pushButtonBrightness2->hide();
     }
 
@@ -240,7 +179,6 @@ MainWindow::MainWindow(configuration::IConfiguration::Pointer configuration, QWi
 
     // as default hide power buttons
     ui_->exitWidget->hide();
-    ui_->horizontalWidgetPower->hide();
 
     // as default hide muted button
     ui_->pushButtonUnMute->hide();
@@ -371,9 +309,6 @@ MainWindow::MainWindow(configuration::IConfiguration::Pointer configuration, QWi
         connect(ui_->pushButton_c6, &QPushButton::clicked, this, &MainWindow::customButtonPressed6);
     }
 
-    // as default hide camera controls
-    ui_->cameraWidget->hide();
-    ui_->pushButtonRecordActive->hide();
 
     // fill gui with dummys if needed
     if (this->c1ButtonForce || this->c2ButtonForce || this->c3ButtonForce || this->c4ButtonForce || this->c5ButtonForce || this->c6ButtonForce) {
@@ -398,11 +333,6 @@ MainWindow::MainWindow(configuration::IConfiguration::Pointer configuration, QWi
         ui_->pushButtonDummy3->hide();
     }
 
-    // show dev labels if dev mode activated
-    if (!this->devModeEnabled) {
-        ui_->devlabel_left->hide();
-        ui_->devlabel_right->hide();
-    }
 
     // set brightness slider attribs from cs config
     ui_->horizontalSliderBrightness->setMinimum(configuration->getCSValue("BR_MIN").toInt());
@@ -413,7 +343,6 @@ MainWindow::MainWindow(configuration::IConfiguration::Pointer configuration, QWi
     // run monitor for custom brightness command if enabled in crankshaft_env.sh
     if (std::ifstream("/tmp/custombrightness")) {
         if (!configuration->hideBrightnessControl()) {
-            ui_->pushButtonBrightness->show();
             ui_->pushButtonBrightness2->show();
         }
         this->customBrightnessControl = true;
@@ -436,20 +365,6 @@ MainWindow::MainWindow(configuration::IConfiguration::Pointer configuration, QWi
         this->oldGUIStyle = true;
         ui_->oldmenuWidget->show();
         ui_->menuWidget->hide();
-    }
-
-    // set bg's on startup
-    MainWindow::updateBG();
-    if (!this->nightModeEnabled) {
-        ui_->pushButtonDay->hide();
-        ui_->pushButtonDay2->hide();
-        ui_->pushButtonNight->show();
-        ui_->pushButtonNight2->show();
-    } else {
-        ui_->pushButtonNight->hide();
-        ui_->pushButtonNight2->hide();
-        ui_->pushButtonDay->show();
-        ui_->pushButtonDay2->show();
     }
 
     // use big clock in classic gui?
@@ -481,13 +396,11 @@ MainWindow::MainWindow(configuration::IConfiguration::Pointer configuration, QWi
 
     // hide gui toggle if enabled in settings
     if (configuration->hideMenuToggle()) {
-        ui_->pushButtonToggleGUI->hide();
         ui_->pushButtonToggleGUI2->hide();
     }
 
     // hide brightness button if eanbled in settings
     if (configuration->hideBrightnessControl()) {
-        ui_->pushButtonBrightness->hide();
         ui_->pushButtonBrightness2->hide();
         ui_->BrightnessSliderControl->hide();
         // also hide volume button cause not needed if brightness not visible
@@ -497,22 +410,6 @@ MainWindow::MainWindow(configuration::IConfiguration::Pointer configuration, QWi
 
     // init alpha values
     MainWindow::updateAlpha();
-
-    // Hide auto day/night if needed
-    if (this->lightsensor) {
-        ui_->pushButtonDay->hide();
-        ui_->pushButtonNight->hide();
-        ui_->pushButtonDay2->hide();
-        ui_->pushButtonNight2->hide();
-        ui_->pushButtonBrightness->hide();
-        ui_->pushButtonBrightness2->hide();
-        // hide also volume cause not needed without brightness
-        ui_->pushButtonVolume->hide();
-        ui_->pushButtonVolume2->hide();
-    }
-
-    // Hide recordings button
-    ui_->pushButtonRecordings->hide();
 
     player = new QMediaPlayer(this);
     playlist = new QMediaPlaylist(this);
@@ -785,20 +682,14 @@ void f1x::openauto::autoapp::ui::MainWindow::updateAlpha()
     if (value != this->alpha_current_str) {
         this->alpha_current_str = value;
         double alpha = value/100.0;
+        QString menu_button_style = "QPushButton{outline-style: dotted; outline-color: #92a8d1;  border: none;} QPushButton:focus {border: 2px solid rgba(125,125,125,0.5);}";
+
         QString alp=QString::number(alpha);
-        ui_->pushButtonExit->setStyleSheet( "QPushButton{background-color: rgba(164, 0, 0, " + alp + " ); outline-style: dotted; outline-color: #92a8d1; border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);} QPushButton:focus {border: 2px solid rgba(125,125,125,0.5);}");
-        ui_->pushButtonShutdown->setStyleSheet( "QPushButton{background-color: rgba(239, 41, 41, " + alp + " ); outline-style: dotted; outline-color: #92a8d1; border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);} QPushButton:focus {border: 2px solid rgba(125,125,125,0.5);}");
-        ui_->pushButtonReboot->setStyleSheet( "QPushButton{background-color: rgba(252, 175, 62, " + alp + " ); outline-style: dotted; outline-color: #92a8d1; border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);} QPushButton:focus {border: 2px solid rgba(125,125,125,0.5);}");
-        ui_->pushButtonCancel->setStyleSheet( "QPushButton{background-color: rgba(32, 74, 135, " + alp + " ); outline-style: dotted; outline-color: #92a8d1; border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);} QPushButton:focus {border: 2px solid rgba(125,125,125,0.5);}");
-        ui_->pushButtonBrightness->setStyleSheet( "QPushButton{background-color: rgba(245, 121, 0, " + alp + " ); outline-style: dotted; outline-color: #92a8d1; border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);} QPushButton:focus {border: 2px solid rgba(125,125,125,0.5);}");
-        ui_->pushButtonVolume->setStyleSheet( "QPushButton{background-color: rgba(64, 191, 191, " + alp + " ); outline-style: dotted; outline-color: #92a8d1; border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);} QPushButton:focus {border: 2px solid rgba(125,125,125,0.5);}");
-        ui_->pushButtonLock->setStyleSheet( "QPushButton{background-color: rgba(15, 54, 5, " + alp + " ); outline-style: dotted; outline-color: #92a8d1; border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);} QPushButton:focus {border: 2px solid rgba(125,125,125,0.5);}");
-        ui_->pushButtonSettings->setStyleSheet( "QPushButton{background-color: rgba(138, 226, 52, " + alp + " ); outline-style: dotted; outline-color: #92a8d1; border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);} QPushButton:focus {border: 2px solid rgba(125,125,125,0.5);}");
-        ui_->pushButtonDay->setStyleSheet( "QPushButton{background: rgba(252, 233, 79, " + alp + " );  outline-style: dotted; outline-color: #92a8d1; border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);} QPushButton:focus {border: 2px solid rgba(125,125,125,0.5);}");
-        ui_->pushButtonNight->setStyleSheet( "QPushButton{background-color: rgba(114, 159, 207, " + alp + " ); outline-style: dotted; outline-color: #92a8d1; border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);} QPushButton:focus {border: 2px solid rgba(125,125,125,0.5);}");
-        ui_->pushButtonCameraShow->setStyleSheet( "QPushButton{background-color: rgba(100, 62, 4, " + alp + " ); outline-style: dotted; outline-color: #92a8d1; border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);} QPushButton:focus {border: 2px solid rgba(125,125,125,0.5);}");
+        ui_->pushButtonVolume->setStyleSheet(menu_button_style);
+        ui_->pushButtonSettings->setStyleSheet(menu_button_style);
+        ui_->pushButtonHeatting->setStyleSheet(menu_button_style);
+        ui_->pushButtonHome->setStyleSheet(menu_button_style);
         ui_->pushButtonWifi->setStyleSheet( "QPushButton{background-color: rgba(252, 175, 62, " + alp + " ); outline-style: dotted; outline-color: #92a8d1; border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);} QPushButton:focus {border: 2px solid rgba(125,125,125,0.5);}");
-        ui_->pushButtonToggleGUI->setStyleSheet( "QPushButton{background-color: rgba(237, 164, 255, " + alp + " ); outline-style: dotted; outline-color: #92a8d1; border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);} QPushButton:focus {border: 2px solid rgba(125,125,125,0.5);}");
         ui_->pushButton_c1->setStyleSheet( "QPushButton{background-color: rgba(" + this->custom_button_color_c1 + ", " + alp + " ); outline-style: dotted; outline-color: #92a8d1; border-radius: 4px; border: 2px solid rgba(255,255,255,0.5); color: rgb(255,255,255);} QPushButton:focus {border: 2px solid rgba(125,125,125,0.5);}");
         ui_->pushButton_c2->setStyleSheet( "QPushButton{background-color: rgba(" + this->custom_button_color_c2 + ", " + alp + " ); outline-style: dotted; outline-color: #92a8d1; border-radius: 4px; border: 2px solid rgba(255,255,255,0.5); color: rgb(255,255,255);} QPushButton:focus {border: 2px solid rgba(125,125,125,0.5);}");
         ui_->pushButton_c3->setStyleSheet( "QPushButton{background-color: rgba(" + this->custom_button_color_c3 + ", " + alp + " ); outline-style: dotted; outline-color: #92a8d1; border-radius: 4px; border: 2px solid rgba(255,255,255,0.5); color: rgb(255,255,255);} QPushButton:focus {border: 2px solid rgba(125,125,125,0.5);}");
@@ -809,7 +700,6 @@ void f1x::openauto::autoapp::ui::MainWindow::updateAlpha()
         ui_->pushButtonDummy2->setStyleSheet( "QPushButton{background-color: rgba(186, 189, 182, " + alp + " ); outline-style: dotted; outline-color: #92a8d1; border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);} QPushButton:focus {border: 2px solid rgba(125,125,125,0.5);}");
         ui_->pushButtonDummy3->setStyleSheet( "QPushButton{background-color: rgba(186, 189, 182, " + alp + " ); outline-style: dotted; outline-color: #92a8d1; border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);} QPushButton:focus {border: 2px solid rgba(125,125,125,0.5);}");
         ui_->pushButtonDebug->setStyleSheet( "QPushButton{background-color: rgba(85, 87, 83, " + alp + " ); outline-style: dotted; outline-color: #92a8d1; border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);} QPushButton:focus {border: 2px solid rgba(125,125,125,0.5);}");
-        ui_->pushButtonMusic->setStyleSheet( "QPushButton{background-color: rgba(78, 154, 6, " + alp + " ); outline-style: dotted; outline-color: #92a8d1; border-radius: 4px; border: 2px solid rgba(255,255,255,0.5); color: rgb(255,255,255);} QPushButton:focus {border: 2px solid rgba(125,125,125,0.5);}");
         ui_->pushButtonAndroidAuto->setStyleSheet( "QPushButton{background-color: rgba(48, 140, 198, " + alp + " ); outline-style: dotted; outline-color: #92a8d1; border: 2px solid rgba(255,255,255,0.5); color: rgb(255,255,255); border-bottom: 0px; border-top: 0px;} QPushButton:focus {border: 2px solid rgba(125,125,125,0.5);}");
         ui_->labelAndroidAutoBottom->setStyleSheet( "background-color: rgba(48, 140, 198, " + alp + " ); border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; border: 2px solid rgba(255,255,255,0.5); color: rgb(255,255,255); border-top: 0px;");
         ui_->labelAndroidAutoTop->setStyleSheet( "background-color: rgba(48, 140, 198, " + alp + " ); border-top-left-radius: 4px; border-top-right-radius: 4px; border: 2px solid rgba(255,255,255,0.5); color: rgb(255,255,255); border-bottom: 0px;");
@@ -834,71 +724,6 @@ void f1x::openauto::autoapp::ui::MainWindow::updateAlpha()
         ui_->pushButtonCameraShow2->setStyleSheet( "background-color: rgba(136, 138, 133, " + alp + " ); color: rgb(255, 255, 255); border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);");
         ui_->pushButtonVolume2->setStyleSheet( "background-color: rgba(136, 138, 133, " + alp + " ); color: rgb(255, 255, 255); border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);");
         ui_->pushButtonDebug2->setStyleSheet( "background-color: rgba(136, 138, 133, " + alp + " ); color: rgb(255, 255, 255); border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);");
-    }
-}
-
-void f1x::openauto::autoapp::ui::MainWindow::switchGuiToNight()
-{
-    //MainWindow::on_pushButtonVolume_clicked();
-    f1x::openauto::autoapp::ui::MainWindow::updateBG();
-    ui_->pushButtonDay->show();
-    ui_->pushButtonDay2->show();
-    ui_->pushButtonNight->hide();
-    ui_->pushButtonNight2->hide();
-    ui_->BrightnessSliderControl->hide();
-    if (ui_->mediaWidget->isVisible() == true) {
-        ui_->VolumeSliderControl->hide();
-    }
-}
-
-void f1x::openauto::autoapp::ui::MainWindow::switchGuiToDay()
-{
-    //MainWindow::on_pushButtonVolume_clicked();
-    f1x::openauto::autoapp::ui::MainWindow::updateBG();
-    ui_->pushButtonNight->show();
-    ui_->pushButtonNight2->show();
-    ui_->pushButtonDay->hide();
-    ui_->pushButtonDay2->hide();
-    ui_->BrightnessSliderControl->hide();
-    if (ui_->mediaWidget->isVisible() == true) {
-        ui_->VolumeSliderControl->hide();
-    }
-}
-
-void f1x::openauto::autoapp::ui::MainWindow::cameraControlHide()
-{
-    if (this->cameraButtonForce) {
-        ui_->cameraWidget->hide();
-        if (!this->oldGUIStyle) {
-            ui_->menuWidget->show();
-        } else {
-            ui_->oldmenuWidget->show();
-        }
-    }
-}
-
-void f1x::openauto::autoapp::ui::MainWindow::cameraControlShow()
-{
-    if (this->cameraButtonForce) {
-        if (!this->oldGUIStyle) {
-            ui_->menuWidget->hide();
-        } else {
-            ui_->oldmenuWidget->hide();
-        }
-        ui_->cameraWidget->show();
-
-        // check if dashcam is recording
-        if (std::ifstream("/tmp/dashcam_is_recording")) {
-            if (ui_->pushButtonRecordActive->isVisible() == false) {
-                ui_->pushButtonRecordActive->show();
-                ui_->pushButtonRecord->hide();
-            }
-        } else {
-            if (ui_->pushButtonRecordActive->isVisible() == true) {
-                ui_->pushButtonRecordActive->hide();
-                ui_->pushButtonRecord->show();
-            }
-        }
     }
 }
 
@@ -960,14 +785,10 @@ void f1x::openauto::autoapp::ui::MainWindow::toggleExit()
     if (!this->exitMenuVisible) {
         ui_->exitWidget->show();
         ui_->buttonWidget->hide();
-        ui_->horizontalWidgetButtons->hide();
-        ui_->horizontalWidgetPower->show();
         this->exitMenuVisible = true;
     } else {
         ui_->buttonWidget->show();
         ui_->exitWidget->hide();
-        ui_->horizontalWidgetButtons->show();
-        ui_->horizontalWidgetPower->hide();
         this->exitMenuVisible = false;
     }
 }
@@ -1109,26 +930,11 @@ void f1x::openauto::autoapp::ui::MainWindow::showTime()
 {
     QTime time=QTime::currentTime();
     QDate date=QDate::currentDate();
-    QString time_text=time.toString("hh : mm : ss");
-    this->date_text=date.toString("MM/dd");
-
-    if ((time.second() % 2) == 0) {
-        time_text[3] = ' ';
-        time_text[8] = ' ';
-    }
+    QString time_text=time.toString("hh : mm");
+    this->date_text=date.toString("dd/MM/yyyy");
 
     ui_->Digital_clock->setText(time_text);
-    ui_->bigClock->setText(time_text);
-    ui_->bigClock2->setText(time_text);
-
-    if (!this->holidaybg) {
-        if (this->date_text == "12/24") {
-            MainWindow::updateBG();
-        }
-        else if (this->date_text == "12/31") {
-            MainWindow::updateBG();
-        }
-    }
+	ui_->Date->setText(this->date_text);
 
     // check connected devices
     if (localDevice->isValid()) {
@@ -1433,24 +1239,14 @@ void f1x::openauto::autoapp::ui::MainWindow::setTrigger()
 {
     this->mediacontentchanged = true;
 
-    ui_->SysinfoTopLeft->setText("Media changed - Scanning ...");
-    ui_->SysinfoTopLeft->show();
 
     QTimer::singleShot(10000, this, SLOT(scanFolders()));
 }
 
 void f1x::openauto::autoapp::ui::MainWindow::setRetryUSBConnect()
 {
-    ui_->SysinfoTopLeft->setText("Trying USB connect ...");
-    ui_->SysinfoTopLeft->show();
 
     QTimer::singleShot(10000, this, SLOT(resetRetryUSBMessage()));
-}
-
-void f1x::openauto::autoapp::ui::MainWindow::resetRetryUSBMessage()
-{
-    ui_->SysinfoTopLeft->setText("");
-    ui_->SysinfoTopLeft->hide();
 }
 
 void f1x::openauto::autoapp::ui::MainWindow::scanFolders()
@@ -1500,11 +1296,9 @@ void f1x::openauto::autoapp::ui::MainWindow::scanFolders()
             }
             ui_->AlbumCoverListView->setModel(model);
             this->currentPlaylistIndex = 0;
-            ui_->SysinfoTopLeft->hide();
         }
     }
     catch(...) {
-        ui_->SysinfoTopLeft->hide();
     }
     ui_->mp3List->hide();
 }
@@ -1786,9 +1580,6 @@ void f1x::openauto::autoapp::ui::MainWindow::tmpChanged()
         if (ui_->mediaWidget->isVisible() == true) {
             ui_->mediaWidget->hide();
         }
-        if (ui_->cameraWidget->isVisible() == true) {
-            ui_->cameraWidget->hide();
-        }
         if (ui_->VolumeSliderControlPlayer->isVisible() == true) {
             ui_->VolumeSliderControlPlayer->hide();
         }
@@ -1798,10 +1589,6 @@ void f1x::openauto::autoapp::ui::MainWindow::tmpChanged()
         if (ui_->BrightnessSliderControl->isVisible() == true) {
             ui_->BrightnessSliderControl->hide();
         }
-        cameraHide();
-        if (ui_->clockOnlyWidget->isVisible() == false) {
-            ui_->clockOnlyWidget->show();
-        }
     } else {
         if (ui_->headerWidget->isVisible() == false) {
             ui_->headerWidget->show();
@@ -1810,12 +1597,6 @@ void f1x::openauto::autoapp::ui::MainWindow::tmpChanged()
             if (ui_->mediaWidget->isVisible() == false) {
                 ui_->VolumeSliderControl->show();
             }
-        }
-        if (ui_->clockOnlyWidget->isVisible() == true) {
-            ui_->clockOnlyWidget->hide();
-            toggleGUI();
-            toggleGUI();
-            updateBG();
         }
     }
 
@@ -1896,95 +1677,6 @@ void f1x::openauto::autoapp::ui::MainWindow::tmpChanged()
         }
     }
 
-    if (std::ifstream("/tmp/config_in_progress") || std::ifstream("/tmp/debug_in_progress") || std::ifstream("/tmp/enable_pairing")) {
-        if (ui_->SysinfoTopLeft2->isVisible() == false) {
-            if (std::ifstream("/tmp/config_in_progress")) {
-                ui_->pushButtonSettings->hide();
-                ui_->pushButtonSettings2->hide();
-                ui_->pushButtonLock->show();
-                ui_->pushButtonLock2->show();
-                ui_->SysinfoTopLeft2->setText("Config in progress ...");
-                ui_->SysinfoTopLeft2->show();
-            }
-            if (std::ifstream("/tmp/debug_in_progress")) {
-                ui_->pushButtonSettings->hide();
-                ui_->pushButtonSettings2->hide();
-                ui_->pushButtonDebug->hide();
-                ui_->pushButtonDebug2->hide();
-                ui_->pushButtonLock->show();
-                ui_->pushButtonLock2->show();
-                ui_->SysinfoTopLeft2->setText("Creating debug.zip ...");
-                ui_->SysinfoTopLeft2->show();
-            }
-            if (std::ifstream("/tmp/enable_pairing")) {
-                ui_->pushButtonDebug->hide();
-                ui_->pushButtonDebug2->hide();
-                ui_->SysinfoTopLeft2->setText("Pairing enabled for 120 seconds!");
-                ui_->SysinfoTopLeft2->show();
-            }
-        }
-    } else {
-        if (ui_->SysinfoTopLeft2->isVisible() == true) {
-            ui_->SysinfoTopLeft2->setText("");
-            ui_->SysinfoTopLeft2->hide();
-            ui_->pushButtonSettings->show();
-            ui_->pushButtonSettings2->show();
-            ui_->pushButtonLock->hide();
-            ui_->pushButtonLock2->hide();
-            if (this->systemDebugmode) {
-                ui_->pushButtonDebug->show();
-                ui_->pushButtonDebug2->show();
-            }
-        }
-    }
-
-    // update day/night state
-    this->nightModeEnabled = check_file_exist("/tmp/night_mode_enabled");
-
-    if (this->nightModeEnabled) {
-        if (!this->DayNightModeState) {
-            this->DayNightModeState = true;
-            f1x::openauto::autoapp::ui::MainWindow::switchGuiToNight();
-        }
-    } else {
-        if (this->DayNightModeState) {
-            this->DayNightModeState = false;
-            f1x::openauto::autoapp::ui::MainWindow::switchGuiToDay();
-        }
-    }
-
-    // camera stuff
-    if (this->cameraButtonForce) {
-
-        // check if dashcam is recording
-        this->dashCamRecording = check_file_exist("/tmp/dashcam_is_recording");
-
-        if (this->dashCamRecording) {
-            if (ui_->dcRecording->isVisible() == false) {
-                ui_->dcRecording->show();
-            }
-        } else {
-            if (ui_->dcRecording->isVisible() == true) {
-                ui_->dcRecording->hide();
-            }
-        }
-
-        // show recording state if dashcam is visible
-        if (ui_->cameraWidget->isVisible() == true) {
-            if (this->dashCamRecording) {
-                if (ui_->pushButtonRecord->isVisible() == true) {
-                    ui_->pushButtonRecordActive->show();
-                    ui_->pushButtonRecord->hide();
-                }
-            } else {
-                if (ui_->pushButtonRecordActive->isVisible() == true) {
-                    ui_->pushButtonRecord->show();
-                    ui_->pushButtonRecordActive->hide();
-                }
-            }
-        }
-    }
-
     // check if shutdown is external triggered and init clean app exit
     if (std::ifstream("/tmp/external_exit")) {
         f1x::openauto::autoapp::ui::MainWindow::MainWindow::exit();
@@ -2054,16 +1746,6 @@ void f1x::openauto::autoapp::ui::MainWindow::tmpChanged()
         button_count = button_count + 1;
     }
 
-    // Hide auto day/night if needed
-    if (this->lightsensor || std::ifstream("/tmp/daynight_gpio")) {
-        ui_->pushButtonDay->hide();
-        ui_->pushButtonNight->hide();
-        ui_->pushButtonDay2->hide();
-        ui_->pushButtonNight2->hide();
-        ui_->pushButtonBrightness->hide();
-        ui_->pushButtonBrightness2->hide();
-    }
-
     // use big clock in classic gui?
     if (this->configuration_->showBigClock()) {
         this->UseBigClock = true;
@@ -2106,55 +1788,13 @@ void f1x::openauto::autoapp::ui::MainWindow::tmpChanged()
 
     // hide gui toggle if enabled in settings
     if (this->configuration_->hideMenuToggle()) {
-        ui_->pushButtonToggleGUI->hide();
         ui_->pushButtonToggleGUI2->hide();
     } else {
-        ui_->pushButtonToggleGUI->show();
         ui_->pushButtonToggleGUI2->show();
     }
 
-    // hide brightness button if enabled in settings
-    if (configuration_->hideBrightnessControl()) {
-        if ((ui_->pushButtonBrightness->isVisible() == true) || (ui_->pushButtonBrightness2->isVisible() == true) || (ui_->BrightnessSliderControl->isVisible() == true)) {
-            ui_->pushButtonBrightness->hide();
-            ui_->pushButtonBrightness2->hide();
-            ui_->BrightnessSliderControl->hide();
-            // also hide volume button if brightness hidden
-            ui_->pushButtonVolume->hide();
-            ui_->pushButtonVolume2->hide();
-            if (ui_->mediaWidget->isVisible() == false) {
-                ui_->VolumeSliderControl->show();
-            }
-        }
-    } else {
-        // Only show brightness buttons if not hidden in config AND not using light sensor
-        if (!this->lightsensor) {
-            if ((ui_->pushButtonBrightness->isVisible() == false) || (ui_->pushButtonBrightness2->isVisible() == false)) {
-                ui_->pushButtonBrightness->show();
-                ui_->pushButtonBrightness2->show();
-                // also show volume button if brightness visible
-                ui_->pushButtonVolume->show();
-                ui_->pushButtonVolume2->show();
-                ui_->BrightnessSliderControl->hide();
-            }
-        }
-    }
 
-    // read value from tsl2561
-    if (std::ifstream("/tmp/tsl2561") && this->configuration_->showLux()) {
-        if (ui_->label_left->isVisible() == false) {
-            ui_->label_left->show();
-            ui_->label_right->show();
-        }
-        ui_->label_left->setText("Lux: " + configuration_->readFileContent("/tmp/tsl2561"));
-    } else {
-        if (ui_->label_left->isVisible() == true) {
-            ui_->label_left->hide();
-            ui_->label_right->hide();
-            ui_->label_left->setText("");
-            ui_->label_right->setText("");
-        }
-    }
+
     MainWindow::updateAlpha();
 
     // update notify
@@ -2163,39 +1803,5 @@ void f1x::openauto::autoapp::ui::MainWindow::tmpChanged()
     this->openautoupdate = check_file_exist("/tmp/openauto_update_available");
     this->systemupdate = check_file_exist("/tmp/system_update_available");
 
-    if (this->csmtupdate || this->udevupdate || this->openautoupdate || this->systemupdate) {
-        if (ui_->pushButtonUpdate->isVisible() == false) {
-            ui_->pushButtonUpdate->show();
-            ui_->label_left->show();
-            ui_->label_right->show();
-            if (this->devModeEnabled) {
-                ui_->devlabel_right->hide();
-            } else {
-                ui_->label_dummy_right->show();
-            }
-        }
-    } else {
-        if (ui_->pushButtonUpdate->isVisible() == true) {
-            ui_->pushButtonUpdate->hide();
-            ui_->label_left->hide();
-            ui_->label_right->hide();
-            ui_->label_dummy_right->hide();
-            if (this->devModeEnabled) {
-                ui_->devlabel_right->show();
-            }
-        }
-   }
-
-    if (std::ifstream("/tmp/btdevice") || std::ifstream("/tmp/media_playing") || std::ifstream("/tmp/dev_mode_enabled") || std::ifstream("/tmp/android_device")) {
-        if (ui_->labelLock->isVisible() == false) {
-            ui_->labelLock->show();
-            ui_->labelLockDummy->show();
-        }
-    } else {
-        if (ui_->labelLock->isVisible() == true) {
-            ui_->labelLock->hide();
-            ui_->labelLockDummy->hide();
-        }
-    }
     updateNetworkInfo();
 }

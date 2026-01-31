@@ -111,11 +111,7 @@ private slots:
     void on_pushButtonBrightness2_clicked();
     void on_pushButtonVolume_clicked();
     void on_pushButtonVolume2_clicked();
-    void switchGuiToDay();
-    void switchGuiToNight();
     void showTime();
-    void cameraControlShow();
-    void cameraControlHide();
     void toggleExit();
     void createDebuglog();
     void setPairable();
@@ -156,7 +152,6 @@ private slots:
     void tmpChanged();
     void setTrigger();
     void setRetryUSBConnect();
-    void resetRetryUSBMessage();
     void updateNetworkInfo();
     bool check_file_exist(const char *filename);
     void hostModeStateChanged(QBluetoothLocalDevice::HostMode);
