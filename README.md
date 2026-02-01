@@ -56,7 +56,7 @@ sudo apt-get install -y protobuf-compiler libprotobuf-dev libusb-1.0.0-dev libss
 sudo apt-get install -y libboost-all-dev libusb-1.0.0-dev libssl-dev cmake libprotobuf-dev protobuf-c-compiler protobuf-compiler libqt5multimedia5 libqt5multimedia5-plugins libqt5multimediawidgets5 qtmultimedia5-dev libqt5bluetooth5 libqt5bluetooth5-bin qtconnectivity5-dev pulseaudio librtaudio-dev
 sudo apt install -y qtdeclarative5-dev qtbase5-dev
 
-git clone https://github.com/openDsh/aasdk.git
+git clone https://github.com/clementb3/aasdk.git
 cd aasdk/
 mkdir build && cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
