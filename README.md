@@ -49,19 +49,25 @@ Copyrights (c) 2018 f1x.studio (Michal Szwaj)
  - Broadcom ilclient from RaspberryPI 3 firmware
  - OpenMAX IL API
 
-### Building
-#### Amd64
-Install the packages specified in the [prebuilts](https://github.com/opencardev/prebuilts) repository. Qt5 is required, versions packaged in modern Ubuntu and Debian
-seem to work fine.
+### Building and running
+```bash
+sudo apt-get -y install cmake build-essential git
+sudo apt-get install -y protobuf-compiler libprotobuf-dev libusb-1.0.0-dev libssl-dev libboost-dev libboost-system-dev libboost-log-dev libboost-all-dev
+sudo apt-get install -y libboost-all-dev libusb-1.0.0-dev libssl-dev cmake libprotobuf-dev protobuf-c-compiler protobuf-compiler libqt5multimedia5 libqt5multimedia5-plugins libqt5multimediawidgets5 qtmultimedia5-dev libqt5bluetooth5 libqt5bluetooth5-bin qtconnectivity5-dev pulseaudio librtaudio-dev
+sudo apt install -y qtdeclarative5-dev qtbase5-dev
 
-You will also likely need to install the udev rules from `prebuilts`
+git clone https://github.com/openDsh/aasdk.git
+cd aasdk/
+mkdir build && cd build
+cmake -DCMAKE_BUILD_TYPE=Release ..
+make -j$(nproc)
+sudo make install
 
-You need to point some CMAKE variables at your `aasdk` files.
-```text
--DAASDK_INCLUDE_DIRS=<path_to_aasdk_repo>/include
--DAASDK_LIBRARIES=<path_to_aasdk_repo>/lib/libaasdk.so
- DAASDK_PROTO_INCLUDE_DIRS=<path_to_aasdk_build>
--DAASDK_PROTO_LIBRARIES=<path_to_aasdk_repo>/lib/libaasdk_proto.so
+cd ..
+git clone https://github.com/openDsh/openauto.git
+cd openauto/
+mkdir build && cd build
+sudo cmake -DCMAKE_BUILD_TYPE=Release.
 ```
 
 #### Raspberry Pi
@@ -71,47 +77,3 @@ However, its easiest to just develop on a more capable `amd64` device.
 ### Remarks
 **This software is not certified by Google Inc. It is created for R&D purposes and may not work as expected by the original authors. Do not use while driving. You use this software at your own risk.**
 
-## Testing
-
-This project includes a comprehensive test suite to verify the functionality of the application.
-
-### Running Tests
-
-To run the tests, follow these steps:
-
-1. Make sure you have built the project successfully
-2. Navigate to the build directory and execute the test runner:
-
-```bash
-cd build
-ctest -V
-```
-
-Or to run specific test categories:
-
-```bash
-cd build
-# Run unit tests
-./tests/unit/openauto_unit_tests
-
-# Run integration tests
-./tests/integration/openauto_integration_tests
-```
-
-### Test Coverage
-
-You can generate test coverage reports using:
-
-```bash
-cd build
-cmake -DCMAKE_BUILD_TYPE=Debug -DWITH_COVERAGE=ON ..
-make
-make test
-make coverage
-```
-
-This will generate coverage reports in the `coverage` directory.
-
-### Test Plan
-
-For detailed information about test cases and validation procedures, refer to [TESTPLAN.md](TESTPLAN.md).
