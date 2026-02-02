@@ -59,8 +59,7 @@ sudo apt-get install -y protobuf-compiler libprotobuf-dev libusb-1.0.0-dev libss
 ## Install aasdk
 ```bash
 git clone https://github.com/opencardev/aasdk.git
-cd aasdk/
-mkdir build && cd build
+cd aasdk && mkdir build && cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
 make -j$(nproc)
 sudo make install
@@ -74,8 +73,7 @@ sudo cp /mnt/c/Users/boula/source/repos/aasdk/build/lib/*.a /usr/local/lib/
 ```bash
 cd ..
 git clone git@github.com:clementb3/openauto.git
-cd openauto/
-mkdir build && cd build
+cd openauto && mkdir build && cd build
 sudo cmake -DCMAKE_BUILD_TYPE=Release ..
 sudo make -j$(nproc)
 ```
