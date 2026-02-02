@@ -50,24 +50,30 @@ Copyrights (c) 2018 f1x.studio (Michal Szwaj)
  - OpenMAX IL API
 
 ### Building and running
+## Install lib
 ```bash
 sudo apt-get -y install cmake build-essential git
-sudo apt-get install -y protobuf-compiler libprotobuf-dev libusb-1.0.0-dev libssl-dev libboost-dev libboost-system-dev libboost-log-dev libboost-all-dev
-sudo apt-get install -y libboost-all-dev libusb-1.0.0-dev libssl-dev cmake libprotobuf-dev protobuf-c-compiler protobuf-compiler libqt5multimedia5 libqt5multimedia5-plugins libqt5multimediawidgets5 qtmultimedia5-dev libqt5bluetooth5 libqt5bluetooth5-bin qtconnectivity5-dev pulseaudio librtaudio-dev
-sudo apt install -y qtdeclarative5-dev qtbase5-dev
+sudo apt-get install -y protobuf-compiler libprotobuf-dev libusb-1.0.0-dev libssl-dev libboost-dev libboost-system-dev libboost-log-dev libboost-all-dev cmake protobuf-c-compiler libqt5multimedia5 libqt5multimedia5-plugins libqt5multimediawidgets5 qtmultimedia5-dev libqt5bluetooth5 libqt5bluetooth5-bin qtconnectivity5-dev pulseaudio librtaudio-dev qtdeclarative5-dev qtbase5-dev libtag1-dev libgps-dev
+```
 
-git clone https://github.com/clementb3/aasdk.git
+## Install aasdk
+```bash
+git clone https://github.com/opencardev/aasdk.git
 cd aasdk/
 mkdir build && cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
 make -j$(nproc)
 sudo make install
+```
 
+## Install OpenAuto
+```bash
 cd ..
 git clone https://github.com/openDsh/openauto.git
 cd openauto/
 mkdir build && cd build
-sudo cmake -DCMAKE_BUILD_TYPE=Release.
+sudo cmake -DCMAKE_BUILD_TYPE=Release ..
+sudo make -j$(nproc)
 ```
 
 #### Raspberry Pi
