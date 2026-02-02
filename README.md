@@ -64,12 +64,15 @@ mkdir build && cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
 make -j$(nproc)
 sudo make install
+
+sudo cp -r ../aasdk/build/_deps/abseil-src/absl /usr/local/include/
+sudo cp -r ../aasdk/build/_deps/protobuf-src/third_party/abseil-cpp/absl /usr/local/include/
 ```
 
 ## Install OpenAuto
 ```bash
 cd ..
-git clone https://github.com/openDsh/openauto.git
+git clone git@github.com:clementb3/openauto.git
 cd openauto/
 mkdir build && cd build
 sudo cmake -DCMAKE_BUILD_TYPE=Release ..
