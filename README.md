@@ -64,7 +64,7 @@ cmake -DCMAKE_BUILD_TYPE=Release ..
 make -j$(nproc)
 sudo make install
 
-sudo cp -r _deps/abseil-src/absl /usr/local/include/
+sudo cp -r _deps/protobuf-src/src/google /usr/local/include/
 sudo cp -r _deps/abseil-src/absl /usr/local/include/
 sudo cp lib/*.a /usr/local/lib/
 ```
