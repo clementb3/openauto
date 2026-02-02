@@ -18,6 +18,8 @@
 
 #include <QApplication>
 #include <f1x/openauto/autoapp/UI/MainWindow.hpp>
+#include <f1x/openauto/autoapp/UI/SettingsWindow.hpp>
+
 #include <QFileInfo>
 #include <QFile>
 #include "ui_mainwindow.h"
@@ -86,37 +88,29 @@ MainWindow::MainWindow(configuration::IConfiguration::Pointer configuration, QWi
     this->wallpaperEQFileExists = check_file_exist("wallpaper-eq.png");
 
     ui_->setupUi(this);
-    
-    // Configure window attributes to prevent ghosting
+
+    settingsPage_ = new SettingsWindow(configuration, this);
+
+    ui_->menuStacked->addWidget(settingsPage_);
+   // Configure window attributes to prevent ghosting
     this->setAttribute(Qt::WA_OpaquePaintEvent, true);
     this->setAttribute(Qt::WA_NoSystemBackground, false);
     this->setAutoFillBackground(true);
 
+    connect(ui_->pushButtonHome, &QPushButton::clicked, this, &MainWindow::openHome);
     connect(ui_->pushButtonSettings, &QPushButton::clicked, this, &MainWindow::openSettings);
-    connect(ui_->pushButtonSettings2, &QPushButton::clicked, this, &MainWindow::openSettings);
-    connect(ui_->pushButtonShutdown2, &QPushButton::clicked, this, &MainWindow::exit);
-    connect(ui_->pushButtonReboot2, &QPushButton::clicked, this, &MainWindow::reboot);
-    connect(ui_->pushButtonCancel2, &QPushButton::clicked, this, &MainWindow::toggleExit);
-    connect(ui_->pushButtonBrightness2, &QPushButton::clicked, this, &MainWindow::showBrightnessSlider);
     connect(ui_->pushButtonVolume, &QPushButton::clicked, this, &MainWindow::showVolumeSlider);
-    connect(ui_->pushButtonVolume2, &QPushButton::clicked, this, &MainWindow::showVolumeSlider);
     connect(ui_->pushButtonDebug, &QPushButton::clicked, this, &MainWindow::createDebuglog);
-    connect(ui_->pushButtonDebug2, &QPushButton::clicked, this, &MainWindow::createDebuglog);
     connect(ui_->pushButtonBluetooth, &QPushButton::clicked, this, &MainWindow::setPairable);
     connect(ui_->pushButtonMute, &QPushButton::clicked, this, &MainWindow::toggleMuteButton);
     connect(ui_->pushButtonMute, &QPushButton::clicked, this, &MainWindow::setMute);
     connect(ui_->pushButtonUnMute, &QPushButton::clicked, this, &MainWindow::toggleMuteButton);
     connect(ui_->pushButtonUnMute, &QPushButton::clicked, this, &MainWindow::setUnMute);
-    connect(ui_->pushButtonToggleGUI2, &QPushButton::clicked, this, &MainWindow::toggleGUI);
     connect(ui_->pushButtonWifi, &QPushButton::clicked, this, &MainWindow::openConnectDialog);
-    connect(ui_->pushButtonWifi2, &QPushButton::clicked, this, &MainWindow::openConnectDialog);
-    connect(ui_->pushButtonMusic2, &QPushButton::clicked, this, &MainWindow::playerShow);
     connect(ui_->pushButtonBack, &QPushButton::clicked, this, &MainWindow::playerHide);
     connect(ui_->pushButtonPlayerBack, &QPushButton::clicked, this, &MainWindow::playerHide);
     connect(ui_->pushButtonAndroidAuto, &QPushButton::clicked, this, &MainWindow::TriggerAppStart);
     connect(ui_->pushButtonAndroidAuto, &QPushButton::clicked, this, &MainWindow::setRetryUSBConnect);
-    connect(ui_->pushButtonAndroidAuto2, &QPushButton::clicked, this, &MainWindow::TriggerAppStart);
-    connect(ui_->pushButtonAndroidAuto2, &QPushButton::clicked, this, &MainWindow::setRetryUSBConnect);
 
 
     ui_->pushButtonBluetooth->hide();
@@ -127,7 +121,6 @@ MainWindow::MainWindow(configuration::IConfiguration::Pointer configuration, QWi
 
 
     ui_->ButtonAndroidAuto->hide();
-    ui_->pushButtonAndroidAuto2->hide();
 
 
 
@@ -145,10 +138,8 @@ MainWindow::MainWindow(configuration::IConfiguration::Pointer configuration, QWi
     // show debug button if enabled
     if (!this->systemDebugmode) {
         ui_->pushButtonDebug->hide();
-        ui_->pushButtonDebug2->hide();
     }
 
-    ui_->pushButtonLock2->hide();
 
     ui_->btDevice->hide();
 
@@ -165,20 +156,12 @@ MainWindow::MainWindow(configuration::IConfiguration::Pointer configuration, QWi
         }
     }
 
-    // hide brightness slider of control file is not existing
-    QFileInfo brightnessFile(brightnessFilename);
-    if (!brightnessFile.exists() && !this->brightnessButtonForce) {
-        ui_->pushButtonBrightness2->hide();
-    }
-
     // as default hide brightness slider
     ui_->BrightnessSliderControl->hide();
 
     // as default hide volume slider player
     ui_->VolumeSliderControlPlayer->hide();
 
-    // as default hide power buttons
-    ui_->exitWidget->hide();
 
     // as default hide muted button
     ui_->pushButtonUnMute->hide();
@@ -186,24 +169,16 @@ MainWindow::MainWindow(configuration::IConfiguration::Pointer configuration, QWi
     // hide wifi if not forced
     if (!this->wifiButtonForce && !std::ifstream("/tmp/mobile_hotspot_detected")) {
         ui_->AAWIFIWidget->hide();
-        ui_->AAWIFIWidget2->hide();
     } else {
         ui_->AAUSBWidget->hide();
-        ui_->AAUSBWidget2->hide();
     }
 
     if (std::ifstream("/tmp/temp_recent_list") || std::ifstream("/tmp/mobile_hotspot_detected")) {
         ui_->pushButtonWifi->show();
         ui_->pushButtonWifi->setFocus();
-        ui_->pushButtonNoWiFiDevice->hide();
-        ui_->pushButtonWifi2->show();
-        ui_->pushButtonWifi2->setFocus();
-        ui_->pushButtonNoWiFiDevice2->hide();
     } else {
         ui_->pushButtonWifi->hide();
         ui_->pushButtonNoWiFiDevice->show();
-        ui_->pushButtonWifi2->hide();
-        ui_->pushButtonNoWiFiDevice2->show();
     }
 
     // set custom buttons if file enabled by trigger file
@@ -342,9 +317,6 @@ MainWindow::MainWindow(configuration::IConfiguration::Pointer configuration, QWi
 
     // run monitor for custom brightness command if enabled in crankshaft_env.sh
     if (std::ifstream("/tmp/custombrightness")) {
-        if (!configuration->hideBrightnessControl()) {
-            ui_->pushButtonBrightness2->show();
-        }
         this->customBrightnessControl = true;
     }
 
@@ -356,16 +328,6 @@ MainWindow::MainWindow(configuration::IConfiguration::Pointer configuration, QWi
         ui_->horizontalSliderVolume->setValue(vol.toInt());
     }
 
-    // switch to old menu if set in settings
-    if (!configuration->oldGUI()) {
-        this->oldGUIStyle = false;
-        ui_->menuWidget->show();
-        ui_->oldmenuWidget->hide();
-    } else {
-        this->oldGUIStyle = true;
-        ui_->oldmenuWidget->show();
-        ui_->menuWidget->hide();
-    }
 
     // use big clock in classic gui?
     if (configuration->showBigClock()) {
@@ -377,35 +339,23 @@ MainWindow::MainWindow(configuration::IConfiguration::Pointer configuration, QWi
     // clock viibility by settings
     if (!configuration->showClock()) {
         ui_->Digital_clock->hide();
-        ui_->bigClock->hide();
         this->NoClock = true;
     } else {
         this->NoClock = false;
         if (this->UseBigClock) {
-            ui_->oldmenuDummy->hide();
-            ui_->bigClock->show();
             if (oldGUIStyle) {
                 ui_->Digital_clock->hide();
             }
         } else {
-            ui_->oldmenuDummy->show();
             ui_->Digital_clock->show();
-            ui_->bigClock->hide();
         }
-    }
-
-    // hide gui toggle if enabled in settings
-    if (configuration->hideMenuToggle()) {
-        ui_->pushButtonToggleGUI2->hide();
     }
 
     // hide brightness button if eanbled in settings
     if (configuration->hideBrightnessControl()) {
-        ui_->pushButtonBrightness2->hide();
         ui_->BrightnessSliderControl->hide();
         // also hide volume button cause not needed if brightness not visible
         ui_->pushButtonVolume->hide();
-        ui_->pushButtonVolume2->hide();
     }
 
     // init alpha values
@@ -704,26 +654,6 @@ void f1x::openauto::autoapp::ui::MainWindow::updateAlpha()
         ui_->labelAndroidAutoBottom->setStyleSheet( "background-color: rgba(48, 140, 198, " + alp + " ); border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; border: 2px solid rgba(255,255,255,0.5); color: rgb(255,255,255); border-top: 0px;");
         ui_->labelAndroidAutoTop->setStyleSheet( "background-color: rgba(48, 140, 198, " + alp + " ); border-top-left-radius: 4px; border-top-right-radius: 4px; border: 2px solid rgba(255,255,255,0.5); color: rgb(255,255,255); border-bottom: 0px;");
         ui_->pushButtonNoDevice->setStyleSheet( "background-color: rgba(48, 140, 198, " + alp + " ); border-radius: 4px; border: 2px solid rgba(255,255,255,0.5); color: rgb(255,255,255);");
-        ui_->pushButtonNoWiFiDevice->setStyleSheet( "background-color: rgba(252, 175, 62, " + alp + " ); border-radius: 4px; border: 2px solid rgba(255,255,255,0.5); color: rgb(255,255,255);");
-        // old style
-        ui_->pushButtonSettings2->setStyleSheet( "background-color: rgba(136, 138, 133, " + alp + " ); color: rgb(255, 255, 255); border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);");
-        ui_->pushButtonLock2->setStyleSheet( "background-color: rgba(136, 138, 133, " + alp + " ); color: rgb(255, 255, 255); border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);");
-        ui_->pushButtonMusic2->setStyleSheet( "background-color: rgba(136, 138, 133, " + alp + " ); color: rgb(255, 255, 255); border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);");
-        ui_->pushButtonBrightness2->setStyleSheet( "background-color: rgba(136, 138, 133, " + alp + " ); color: rgb(255, 255, 255); border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);");
-        ui_->pushButtonToggleGUI2->setStyleSheet( "background-color: rgba(136, 138, 133, " + alp + " ); color: rgb(255, 255, 255); border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);");
-        ui_->pushButtonExit2->setStyleSheet( "background-color: rgba(136, 138, 133, " + alp + " ); color: rgb(255, 255, 255); border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);");
-        ui_->pushButtonShutdown2->setStyleSheet( "background-color: rgba(136, 138, 133, " + alp + " ); color: rgb(255, 255, 255); border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);");
-        ui_->pushButtonReboot2->setStyleSheet( "background-color: rgba(136, 138, 133, " + alp + " ); color: rgb(255, 255, 255); border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);");
-        ui_->pushButtonCancel2->setStyleSheet( "background-color: rgba(136, 138, 133, " + alp + " ); color: rgb(255, 255, 255); border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);");
-        ui_->pushButtonAndroidAuto2->setStyleSheet( "background-color: rgba(136, 138, 133, " + alp + " ); color: rgb(255, 255, 255); border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);");
-        ui_->pushButtonNoDevice2->setStyleSheet( "background-color: rgba(136, 138, 133, " + alp + " ); color: rgb(255, 255, 255); border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);");
-        ui_->pushButtonWifi2->setStyleSheet( "background-color: rgba(136, 138, 133, " + alp + " ); color: rgb(255, 255, 255); border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);");
-        ui_->pushButtonNoWiFiDevice2->setStyleSheet( "background-color: rgba(136, 138, 133, " + alp + " ); color: rgb(255, 255, 255); border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);");
-        ui_->pushButtonDay2->setStyleSheet( "background-color: rgba(136, 138, 133, " + alp + " ); color: rgb(255, 255, 255); border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);");
-        ui_->pushButtonNight2->setStyleSheet( "background-color: rgba(136, 138, 133, " + alp + " ); color: rgb(255, 255, 255); border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);");
-        ui_->pushButtonCameraShow2->setStyleSheet( "background-color: rgba(136, 138, 133, " + alp + " ); color: rgb(255, 255, 255); border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);");
-        ui_->pushButtonVolume2->setStyleSheet( "background-color: rgba(136, 138, 133, " + alp + " ); color: rgb(255, 255, 255); border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);");
-        ui_->pushButtonDebug2->setStyleSheet( "background-color: rgba(136, 138, 133, " + alp + " ); color: rgb(255, 255, 255); border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);");
     }
 }
 
@@ -733,12 +663,6 @@ void f1x::openauto::autoapp::ui::MainWindow::playerShow()
         this->setStyleSheet("QMainWindow { background: url(wallpaper-eq.png); background-repeat: no-repeat; background-position: center; }");
     } else {
         this->setStyleSheet("QMainWindow { background: url(:/black.png); background-repeat: no-repeat; background-position: center; }");
-    }
-
-    if (!this->oldGUIStyle) {
-        ui_->menuWidget->hide();
-    } else {
-        ui_->oldmenuWidget->hide();
     }
     ui_->mediaWidget->show();
     ui_->VolumeSliderControlPlayer->show();
@@ -764,11 +688,6 @@ void f1x::openauto::autoapp::ui::MainWindow::playerShow()
 
 void f1x::openauto::autoapp::ui::MainWindow::playerHide()
 {
-    if (!this->oldGUIStyle) {
-        ui_->menuWidget->show();
-    } else {
-        ui_->oldmenuWidget->show();
-    }
     ui_->mediaWidget->hide();
     ui_->VolumeSliderControl->show();
     ui_->VolumeSliderControlPlayer->hide();
@@ -783,12 +702,8 @@ void f1x::openauto::autoapp::ui::MainWindow::playerHide()
 void f1x::openauto::autoapp::ui::MainWindow::toggleExit()
 {
     if (!this->exitMenuVisible) {
-        ui_->exitWidget->show();
-        ui_->buttonWidget->hide();
         this->exitMenuVisible = true;
     } else {
-        ui_->buttonWidget->show();
-        ui_->exitWidget->hide();
         this->exitMenuVisible = false;
     }
 }
@@ -810,29 +725,6 @@ void f1x::openauto::autoapp::ui::MainWindow::toggleGUI()
 {
     // Force update before toggling to clear any stale content
     this->update();
-    
-    if (!this->oldGUIStyle) {
-        ui_->oldmenuWidget->show();
-        ui_->menuWidget->hide();
-        this->oldGUIStyle = true;
-        if (!this->NoClock) {
-            if (UseBigClock) {
-                ui_->Digital_clock->hide();
-                ui_->bigClock->show();
-            } else {
-                ui_->Digital_clock->show();
-                ui_->bigClock->hide();
-            }
-        }
-        MainWindow::on_pushButtonVolume_clicked();
-    } else {
-        ui_->menuWidget->show();
-        ui_->oldmenuWidget->hide();
-        this->oldGUIStyle = false;
-        if (!this->NoClock) {
-            ui_->Digital_clock->show();
-        }
-    }
     
     f1x::openauto::autoapp::ui::MainWindow::updateBG();
     f1x::openauto::autoapp::ui::MainWindow::tmpChanged();
@@ -1084,6 +976,14 @@ void f1x::openauto::autoapp::ui::MainWindow::on_mp3List_itemClicked(QListWidgetI
     this->selectedMp3file = item->text();
 }
 
+void f1x::openauto::autoapp::ui::MainWindow::openSettings() {
+    ui_->menuStacked->setCurrentWidget(settingsPage_);
+}
+
+void f1x::openauto::autoapp::ui::MainWindow::openHome() {
+    ui_->menuStacked->setCurrentIndex(0);
+}
+
 void f1x::openauto::autoapp::ui::MainWindow::metaDataChanged()
 {
     QString fullpathplaying = player->currentMedia().request().url().toString();
@@ -1330,7 +1230,7 @@ void f1x::openauto::autoapp::ui::MainWindow::scanFiles()
                     TagLib::FileRef file((this->musicfolder + "/" + this->albumfolder + "/" + filename).toUtf8(),true);
                     TagLib::String artist_string = file.tag()->artist();
                     TagLib::String title_string = file.tag()->title();
-                    TagLib::uint track_string = file.tag()->track();
+                    unsigned int track_string = file.tag()->track();
                     QString artistid3 = QString::fromStdWString(artist_string.toCWString());
                     QString titleid3 = QString::fromStdWString(title_string.toCWString());
                     QString trackid3 = QString::number(track_string);
@@ -1567,12 +1467,6 @@ void f1x::openauto::autoapp::ui::MainWindow::tmpChanged()
 
     // check if system is in display off mode (tap2wake/screensaver)
     if (std::ifstream("/tmp/screensaver")) {
-        if (ui_->menuWidget->isVisible() == true) {
-            ui_->menuWidget->hide();
-        }
-        if (ui_->oldmenuWidget->isVisible() == true) {
-            ui_->oldmenuWidget->hide();
-        }
         if (ui_->headerWidget->isVisible() == true) {
             ui_->headerWidget->hide();
             CloseAllDialogs();
@@ -1620,10 +1514,6 @@ void f1x::openauto::autoapp::ui::MainWindow::tmpChanged()
             ui_->ButtonAndroidAuto->show();
             ui_->pushButtonNoDevice->hide();
         }
-        if (ui_->pushButtonAndroidAuto2->isVisible() == false) {
-            ui_->pushButtonAndroidAuto2->show();
-            ui_->pushButtonNoDevice2->hide();
-        }
         try {
             QFile deviceData(QString("/tmp/android_device"));
             deviceData.open(QIODevice::ReadOnly);
@@ -1643,10 +1533,6 @@ void f1x::openauto::autoapp::ui::MainWindow::tmpChanged()
         if (ui_->ButtonAndroidAuto->isVisible() == true) {
             ui_->pushButtonNoDevice->show();
             ui_->ButtonAndroidAuto->hide();
-        }
-        if (ui_->pushButtonAndroidAuto2->isVisible() == true) {
-            ui_->pushButtonNoDevice2->show();
-            ui_->pushButtonAndroidAuto2->hide();
         }
         ui_->labelAndroidAutoBottom->setText("");
     }
@@ -1686,18 +1572,14 @@ void f1x::openauto::autoapp::ui::MainWindow::tmpChanged()
 
     // hide wifi if hotspot disabled and force wifi unselected
     if (!this->hotspotActive && !std::ifstream("/tmp/mobile_hotspot_detected")) {
-        if ((ui_->AAWIFIWidget->isVisible() == true) || (ui_->AAWIFIWidget2->isVisible() == true)){
+        if (ui_->AAWIFIWidget->isVisible() == true){
             ui_->AAWIFIWidget->hide();
-            ui_->AAWIFIWidget2->hide();
             ui_->AAUSBWidget->show();
-            ui_->AAUSBWidget2->show();
         }
     } else {
-        if ((ui_->AAWIFIWidget->isVisible() == false) || (ui_->AAWIFIWidget2->isVisible() == false)) {
+        if ((ui_->AAWIFIWidget->isVisible() == false)) {
             ui_->AAWIFIWidget->show();
-            ui_->AAWIFIWidget2->show();
             ui_->AAUSBWidget->hide();
-            ui_->AAUSBWidget2->hide();
         }
     }
 
@@ -1709,13 +1591,6 @@ void f1x::openauto::autoapp::ui::MainWindow::tmpChanged()
         if (ui_->pushButtonNoWiFiDevice->isVisible() == true) {
             ui_->pushButtonNoWiFiDevice->hide();
         }
-        if (ui_->pushButtonWifi2->isVisible() == false) {
-            ui_->pushButtonWifi2->show();
-            ui_->pushButtonWifi2->setFocus();
-        }
-        if (ui_->pushButtonNoWiFiDevice2->isVisible() == true) {
-            ui_->pushButtonNoWiFiDevice2->hide();
-        }
     } else {
         if (ui_->pushButtonWifi->isVisible() == true) {
             ui_->pushButtonWifi->hide();
@@ -1723,27 +1598,6 @@ void f1x::openauto::autoapp::ui::MainWindow::tmpChanged()
         if (ui_->pushButtonNoWiFiDevice->isVisible() == false) {
             ui_->pushButtonNoWiFiDevice->show();
         }
-        if (ui_->pushButtonWifi2->isVisible() == true) {
-            ui_->pushButtonWifi2->hide();
-        }
-        if (ui_->pushButtonNoWiFiDevice2->isVisible() == false) {
-            ui_->pushButtonNoWiFiDevice2->show();
-        }
-    }
-
-    // handle dummys in classic menu
-    int button_count = 0;
-    if (ui_->pushButtonCameraShow2->isVisible() == true) {
-        button_count = button_count + 1;
-    }
-    if (ui_->AAWIFIWidget2->isVisible() == true) {
-        button_count = button_count + 1;
-    }
-    if (ui_->pushButtonDebug2->isVisible() == true) {
-        button_count = button_count + 1;
-    }
-    if (ui_->pushButtonVolume2->isVisible() == true) {
-        button_count = button_count + 1;
     }
 
     // use big clock in classic gui?
@@ -1751,27 +1605,6 @@ void f1x::openauto::autoapp::ui::MainWindow::tmpChanged()
         this->UseBigClock = true;
     } else {
         this->UseBigClock = false;
-    }
-
-    // clock viibility by settings
-    if (!this->configuration_->showClock()) {
-        ui_->Digital_clock->hide();
-        ui_->oldmenuDummy->show();
-        ui_->bigClock->hide();
-        this->NoClock = true;
-    } else {
-        this->NoClock = false;
-        if (this->UseBigClock && ui_->oldmenuWidget->isVisible() == true) {
-            ui_->oldmenuDummy->hide();
-            ui_->bigClock->show();
-            if (oldGUIStyle) {
-                ui_->Digital_clock->hide();
-            }
-        } else {
-            ui_->oldmenuDummy->show();
-            ui_->Digital_clock->show();
-            ui_->bigClock->hide();
-        }
     }
 
     if (!this->configuration_->showNetworkinfo()) {
@@ -1786,12 +1619,6 @@ void f1x::openauto::autoapp::ui::MainWindow::tmpChanged()
         }
     }
 
-    // hide gui toggle if enabled in settings
-    if (this->configuration_->hideMenuToggle()) {
-        ui_->pushButtonToggleGUI2->hide();
-    } else {
-        ui_->pushButtonToggleGUI2->show();
-    }
 
 
 

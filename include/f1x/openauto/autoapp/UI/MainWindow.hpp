@@ -22,6 +22,7 @@
 #include <QMainWindow>
 #include <QFile>
 #include <f1x/openauto/autoapp/Configuration/IConfiguration.hpp>
+#include <f1x/openauto/autoapp/UI/SettingsWindow.hpp>
 
 #include <QMediaPlayer>
 #include <QListWidgetItem>
@@ -45,7 +46,8 @@
 #include <QKeyEvent>
 
 #include <QBluetoothLocalDevice>
-//#include <QtBluetooth>
+
+#include <QtBluetooth>
 
 namespace Ui
 {
@@ -74,7 +76,6 @@ public:
 signals:
     void exit();
     void reboot();
-    void openSettings();
     void toggleCursor();
     void TriggerScriptDay();
     void TriggerScriptNight();
@@ -128,6 +129,8 @@ private slots:
     void playerShow();
     void playerHide();
     void updateBG();
+	void openSettings();
+	void openHome();
 
     void on_horizontalSliderProgressPlayer_sliderMoved(int position);
     void on_horizontalSliderVolumePlayer_sliderMoved(int position);
@@ -163,6 +166,8 @@ private slots:
 
 private:
     Ui::MainWindow* ui_;
+    SettingsWindow *settingsPage_; // Pointeur vers votre nouvelle page
+
     configuration::IConfiguration::Pointer configuration_;
 
     QString brightnessFilename = "/sys/class/backlight/rpi_backlight/brightness";

@@ -4,3 +4,7 @@
 
 /.vs
 /out
+/autoapp_autogen
+/btservice_autogen
+/build
+/bin

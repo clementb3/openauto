@@ -9,6 +9,10 @@
       "binaryDir": "${sourceDir}/out/build/${presetName}",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_AUTOMOC": "ON",
+        "CMAKE_AUTOUIC": "ON",
+        "CMAKE_AUTORCC": "ON",
+        "RPI_BUILD": "OFF",
         "NOPI": "ON"
       },
       "vendor": {
@@ -34,7 +38,7 @@
   ],
   "vendor": {
     "qt-project.org/Presets": {
-      "checksum": "bvbzvN57VEFnsLRaPuJXONgmIvc="
+      "checksum": "gCE1TIIrHDBMQtbSh2qNCwwndzM="
     }
   }
 }
