@@ -67,6 +67,7 @@ sudo make install
 
 sudo cp -r ../aasdk/build/_deps/abseil-src/absl /usr/local/include/
 sudo cp -r ../aasdk/build/_deps/protobuf-src/third_party/abseil-cpp/absl /usr/local/include/
+sudo cp /mnt/c/Users/boula/source/repos/aasdk/build/lib/*.a /usr/local/lib/
 ```
 
 ## Install OpenAuto
