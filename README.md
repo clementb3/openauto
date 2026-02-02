@@ -65,7 +65,7 @@ make -j$(nproc)
 sudo make install
 
 sudo cp -r _deps/abseil-src/absl /usr/local/include/
-sudo cp -r _deps/protobuf-src/third_party/abseil-cpp/absl /usr/local/include/
+sudo cp -r _deps/abseil-src/absl /usr/local/include/
 sudo cp lib/*.a /usr/local/lib/
 ```
 
