@@ -1,8 +1,0 @@
-/mnt/c/Users/boula/source/repos/openauto/CMakeFiles/autoapp.dir
-/mnt/c/Users/boula/source/repos/openauto/CMakeFiles/btservice.dir
-/mnt/c/Users/boula/source/repos/openauto/CMakeFiles/edit_cache.dir
-/mnt/c/Users/boula/source/repos/openauto/CMakeFiles/rebuild_cache.dir
-/mnt/c/Users/boula/source/repos/openauto/CMakeFiles/autoapp_autogen_timestamp_deps.dir
-/mnt/c/Users/boula/source/repos/openauto/CMakeFiles/autoapp_autogen.dir
-/mnt/c/Users/boula/source/repos/openauto/CMakeFiles/btservice_autogen_timestamp_deps.dir
-/mnt/c/Users/boula/source/repos/openauto/CMakeFiles/btservice_autogen.dir
