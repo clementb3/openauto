@@ -23,6 +23,7 @@
 #include <QFile>
 #include <f1x/openauto/autoapp/Configuration/IConfiguration.hpp>
 #include <f1x/openauto/autoapp/UI/SettingsWindow.hpp>
+#include <f1x/openauto/autoapp/UI/HeatingWindow.hpp>
 
 #include <QMediaPlayer>
 #include <QListWidgetItem>
@@ -129,8 +130,11 @@ private slots:
     void playerShow();
     void playerHide();
     void updateBG();
-	void openSettings();
+    void openSettings();
+    void openHeating();
 	void openHome();
+    void showVolume();
+    void onVolumeChanged(int value);
 
     void on_horizontalSliderProgressPlayer_sliderMoved(int position);
     void on_horizontalSliderVolumePlayer_sliderMoved(int position);
@@ -166,7 +170,13 @@ private slots:
 
 private:
     Ui::MainWindow* ui_;
-    SettingsWindow *settingsPage_; // Pointeur vers votre nouvelle page
+    SettingsWindow *settingsPage_;
+    HeatingWindow *heatingWindow_;
+
+    QPushButton *volumeButon_;
+    QSlider* volumeSlider_;
+
+    QTimer* volumeTimer_;
 
     configuration::IConfiguration::Pointer configuration_;
 
@@ -275,7 +285,7 @@ private:
 
 protected:
     void keyPressEvent(QKeyEvent *event);
-
+    void showEvent(QShowEvent *event) override;
 };
 
 }

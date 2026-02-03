@@ -18,7 +18,8 @@
       "vendor": {
         "microsoft.com/VisualStudioSettings/CMake/1.0": {
           "hostOS": [
-            "Linux"
+            "Linux",
+            "Windows"
           ]
         }
       }
@@ -38,7 +39,7 @@
   ],
   "vendor": {
     "qt-project.org/Presets": {
-      "checksum": "gCE1TIIrHDBMQtbSh2qNCwwndzM="
+      "checksum": "Zdf6/VnWwdfqwEXxKeROvjU/fHA="
     }
   }
 }

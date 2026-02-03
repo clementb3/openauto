@@ -35,6 +35,7 @@
 #include <f1x/openauto/autoapp/Configuration/Configuration.hpp>
 #include <f1x/openauto/autoapp/UI/MainWindow.hpp>
 #include <f1x/openauto/autoapp/UI/SettingsWindow.hpp>
+#include <f1x/openauto/autoapp/UI/HeatingWindow.hpp>
 #include <f1x/openauto/autoapp/UI/ConnectDialog.hpp>
 #include <f1x/openauto/autoapp/UI/WarningDialog.hpp>
 #include <f1x/openauto/autoapp/UI/UpdateDialog.hpp>
@@ -137,6 +138,9 @@ int main(int argc, char* argv[])
 
     autoapp::ui::SettingsWindow settingsWindow(configuration);
     //settingsWindow.setWindowFlags(Qt::WindowStaysOnTopHint);
+
+    autoapp::ui::HeatingWindow heatingWindow(configuration);
+
 
     settingsWindow.setFixedSize(width, height);
     settingsWindow.adjustSize();
@@ -291,10 +295,6 @@ int main(int argc, char* argv[])
         updatedialog.close();
         OPENAUTO_LOG(debug) << "[AutoApp] Close all possible open dialogs.";
     });
-
-    if (configuration->hideWarning() == false) {
-        warningdialog.show();
-    }
 
     app->waitForUSBDevice();
 

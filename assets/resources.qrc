@@ -40,5 +40,15 @@
         <file>album-hot.png</file>
         <file>Roboto-Regular.ttf</file>
         <file>heat-hot.png</file>
+        <file>airFlowFront.png</file>
+        <file>airFlowUp.png</file>
+        <file>airFlowDownFront.png</file>
+        <file>airFlowDown.png</file>
+        <file>airScraft.png</file>
+        <file>seatHeat.png</file>
+        <file>defoggingRear.png</file>
+        <file>defoggingFront.png</file>
+        <file>recyclingAirFlow.png</file>
+	<file>sound.png</file>
     </qresource>
 </RCC>

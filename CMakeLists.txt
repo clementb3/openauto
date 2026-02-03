@@ -6,9 +6,9 @@ message(STATUS "OpenAuto")
 
 option(NOPI "Build for Non Raspberry Pi" OFF)
 
-set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOMOC ON)
 
 # Set Compile Versions
 string(TIMESTAMP OPENAUTO_BUILD_DATE "%Y%m%d")  # Dynamic Binary Release Build Date
