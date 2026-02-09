@@ -22,80 +22,80 @@
 
 namespace f1x
 {
-namespace openauto
-{
-namespace autoapp
-{
-namespace projection
-{
+	namespace openauto
+	{
+		namespace autoapp
+		{
+			namespace projection
+			{
 
-QtVideoOutput::QtVideoOutput(configuration::IConfiguration::Pointer configuration)
-    : VideoOutput(std::move(configuration))
-{
-    this->moveToThread(QApplication::instance()->thread());
-    connect(this, &QtVideoOutput::startPlayback, this, &QtVideoOutput::onStartPlayback, Qt::QueuedConnection);
-    connect(this, &QtVideoOutput::stopPlayback, this, &QtVideoOutput::onStopPlayback, Qt::QueuedConnection);
-    QMetaObject::invokeMethod(this, "createVideoOutput", Qt::BlockingQueuedConnection);
-}
+				QtVideoOutput::QtVideoOutput(configuration::IConfiguration::Pointer configuration)
+					: VideoOutput(std::move(configuration))
+				{
+					this->moveToThread(QApplication::instance()->thread());
+					connect(this, &QtVideoOutput::startPlayback, this, &QtVideoOutput::onStartPlayback, Qt::QueuedConnection);
+					connect(this, &QtVideoOutput::stopPlayback, this, &QtVideoOutput::onStopPlayback, Qt::QueuedConnection);
+					QMetaObject::invokeMethod(this, "createVideoOutput", Qt::BlockingQueuedConnection);
+				}
 
-void QtVideoOutput::createVideoOutput()
-{
-    OPENAUTO_LOG(info) << "[QtVideoOutput] createVideoOutput()";
-    videoWidget_ = std::make_unique<QVideoWidget>();
-    mediaPlayer_ = std::make_unique<QMediaPlayer>(nullptr, QMediaPlayer::StreamPlayback);
-}
+				void QtVideoOutput::createVideoOutput()
+				{
+					OPENAUTO_LOG(info) << "[QtVideoOutput] createVideoOutput()";
+					videoWidget_ = std::make_unique<QVideoWidget>();
+					mediaPlayer_ = std::make_unique<QMediaPlayer>(nullptr, QMediaPlayer::StreamPlayback);
+				}
 
 
-bool QtVideoOutput::open()
-{
-    return videoBuffer_.open(QIODevice::ReadWrite);
-}
+				bool QtVideoOutput::open()
+				{
+					return videoBuffer_.open(QIODevice::ReadWrite);
+				}
 
-bool QtVideoOutput::init()
-{
-    emit startPlayback();
-    return true;
-}
+				bool QtVideoOutput::init()
+				{
+					emit startPlayback();
+					return true;
+				}
 
-void QtVideoOutput::stop()
-{
-    emit stopPlayback();
-}
+				void QtVideoOutput::stop()
+				{
+					emit stopPlayback();
+				}
 
-void QtVideoOutput::write(uint64_t, const aasdk::common::DataConstBuffer& buffer)
-{
-    videoBuffer_.write(reinterpret_cast<const char*>(buffer.cdata), buffer.size);
-}
+				void QtVideoOutput::write(uint64_t, const aasdk::common::DataConstBuffer& buffer)
+				{
+					videoBuffer_.write(reinterpret_cast<const char*>(buffer.cdata), buffer.size);
+				}
 
-void QtVideoOutput::onStartPlayback()
-{
-    videoWidget_->setAttribute(Qt::WA_OpaquePaintEvent, true);
-    videoWidget_->setAttribute(Qt::WA_NoSystemBackground, true);
-    videoWidget_->setAspectRatioMode(Qt::IgnoreAspectRatio);
-    videoWidget_->setFocus();
-    videoWidget_->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
-    videoWidget_->raise();
-    videoWidget_->setFullScreen(true);
-    videoWidget_->show();
-    videoWidget_->activateWindow();
+				void QtVideoOutput::onStartPlayback()
+				{
+					videoWidget_->setAttribute(Qt::WA_OpaquePaintEvent, true);
+					videoWidget_->setAttribute(Qt::WA_NoSystemBackground, true);
+					videoWidget_->setAspectRatioMode(Qt::IgnoreAspectRatio);
+					videoWidget_->setFocus();
+					videoWidget_->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+					videoWidget_->raise();
+					videoWidget_->setFullScreen(true);
+					videoWidget_->show();
+					videoWidget_->activateWindow();
 
-    mediaPlayer_->setVideoOutput(videoWidget_.get());
-    mediaPlayer_->setMedia(QMediaContent(), &videoBuffer_);
-    mediaPlayer_->play();
+					mediaPlayer_->setVideoOutput(videoWidget_.get());
+					mediaPlayer_->setMedia(QMediaContent(), &videoBuffer_);
+					mediaPlayer_->play();
 
-    // TODO: This only outputs a line if there's an error - FIXME - Output a proper status instead
-    OPENAUTO_LOG(debug) << "Player error state -> " << mediaPlayer_->errorString().toStdString();
-}
+					// TODO: This only outputs a line if there's an error - FIXME - Output a proper status instead
+					OPENAUTO_LOG(debug) << "Player error state -> " << mediaPlayer_->errorString().toStdString();
+				}
 
-void QtVideoOutput::onStopPlayback()
-{
-    videoWidget_->hide();
-    videoWidget_->clearFocus();
-    mediaPlayer_->stop();
-    mediaPlayer_->setMedia(QMediaContent());
-}
+				void QtVideoOutput::onStopPlayback()
+				{
+					videoWidget_->hide();
+					videoWidget_->clearFocus();
+					mediaPlayer_->stop();
+					mediaPlayer_->setMedia(QMediaContent());
+				}
 
-}
-}
-}
+			}
+		}
+	}
 }

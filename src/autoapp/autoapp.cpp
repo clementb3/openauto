@@ -132,21 +132,24 @@ int main(int argc, char* argv[])
     OPENAUTO_LOG(info) << "[AutoApp] Display height: " << height;
 
     auto configuration = std::make_shared<autoapp::configuration::Configuration>();
+    OPENAUTO_LOG(info) << "1";
 
     autoapp::ui::MainWindow mainWindow(configuration);
     //mainWindow.setWindowFlags(Qt::WindowStaysOnTopHint);
 
-    autoapp::ui::SettingsWindow settingsWindow(configuration);
+    //autoapp::ui::SettingsWindow settingsWindow(configuration);
     //settingsWindow.setWindowFlags(Qt::WindowStaysOnTopHint);
 
-    autoapp::ui::HeatingWindow heatingWindow(configuration);
+    //autoapp::ui::HeatingWindow heatingWindow(configuration);
+    OPENAUTO_LOG(info) << "2";
 
 
-    settingsWindow.setFixedSize(width, height);
-    settingsWindow.adjustSize();
+    //settingsWindow.setFixedSize(width, height);
+    //settingsWindow.adjustSize();
 
     autoapp::configuration::RecentAddressesList recentAddressesList(7);
     recentAddressesList.read();
+    OPENAUTO_LOG(info) << "3";
 
     aasdk::tcp::TCPWrapper tcpWrapper;
     autoapp::ui::ConnectDialog connectdialog(ioService, tcpWrapper, recentAddressesList);
@@ -168,6 +171,7 @@ int main(int argc, char* argv[])
     QObject::connect(&mainWindow, &autoapp::ui::MainWindow::openConnectDialog, &connectdialog, &autoapp::ui::ConnectDialog::exec);
     QObject::connect(&mainWindow, &autoapp::ui::MainWindow::openUpdateDialog, &updatedialog, &autoapp::ui::UpdateDialog::updateCheck);
     QObject::connect(&mainWindow, &autoapp::ui::MainWindow::openUpdateDialog, &updatedialog, &autoapp::ui::UpdateDialog::exec);
+    OPENAUTO_LOG(info) << "4";
 
     if (configuration->showCursor() == false) {
         qApplication.setOverrideCursor(Qt::BlankCursor);
@@ -229,16 +233,19 @@ int main(int argc, char* argv[])
         system("/opt/crankshaft/service_daynight.sh app day");
         OPENAUTO_LOG(debug) << "[AutoApp] MainWindow Day.";
     });
+    OPENAUTO_LOG(info) << "5";
 
     mainWindow.showFullScreen();
     mainWindow.setFixedSize(width, height);
     mainWindow.adjustSize();
+    OPENAUTO_LOG(info) << "6";
 
     aasdk::usb::USBWrapper usbWrapper(usbContext);
     aasdk::usb::AccessoryModeQueryFactory queryFactory(usbWrapper, ioService);
     aasdk::usb::AccessoryModeQueryChainFactory queryChainFactory(usbWrapper, ioService, queryFactory);
     autoapp::service::ServiceFactory serviceFactory(ioService, configuration);
     autoapp::service::AndroidAutoEntityFactory androidAutoEntityFactory(ioService, configuration, serviceFactory);
+    OPENAUTO_LOG(info) << "7";
 
     auto usbHub(std::make_shared<aasdk::usb::USBHub>(usbWrapper, ioService, queryChainFactory));
     auto connectedAccessoriesEnumerator(std::make_shared<aasdk::usb::ConnectedAccessoriesEnumerator>(usbWrapper, ioService, queryChainFactory));
@@ -287,16 +294,19 @@ int main(int argc, char* argv[])
             OPENAUTO_LOG(error) << "[AutoApp] Exception in manual stop android auto.";
         }
     });
+    OPENAUTO_LOG(info) << "8";
 
-    QObject::connect(&mainWindow, &autoapp::ui::MainWindow::CloseAllDialogs, [&settingsWindow, &connectdialog, &updatedialog, &warningdialog]() {
+    /*QObject::connect(&mainWindow, &autoapp::ui::MainWindow::CloseAllDialogs, [&settingsWindow, &connectdialog, &updatedialog, &warningdialog]() {
         settingsWindow.close();
         connectdialog.close();
         warningdialog.close();
         updatedialog.close();
         OPENAUTO_LOG(debug) << "[AutoApp] Close all possible open dialogs.";
-    });
+    });*/
 
     app->waitForUSBDevice();
+    OPENAUTO_LOG(info) << "9";
+
 
     auto result = qApplication.exec();
 
