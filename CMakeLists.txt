@@ -4,8 +4,6 @@ project(openauto CXX)
 
 message(STATUS "OpenAuto")
 
-option(NOPI "Build for Non Raspberry Pi" OFF)
-
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOMOC ON)
@@ -62,17 +60,6 @@ endif()
 if (WIN32)
     set(WINSOCK2_LIBRARIES "ws2_32")
 endif (WIN32)
-
-if (NOPI)
-    message(STATUS "Configuring for Non-Raspberry Pi")
-else()
-    message(STATUS "Configuring for RaspberryPi")
-    add_definitions(-DUSE_OMX -DOMX_SKIP64BIT -DRASPBERRYPI3)
-    set(BCM_HOST_LIBRARIES "/opt/vc/lib/libbcm_host.so")
-    set(BCM_HOST_INCLUDE_DIRS "/opt/vc/include")
-    set(ILCLIENT_INCLUDE_DIRS "/opt/vc/src/hello_pi/libs/ilclient")
-    set(ILCLIENT_LIBRARIES "/opt/vc/src/hello_pi/libs/ilclient/libilclient.a;/opt/vc/lib/libvcos.so;/opt/vc/lib/libvcilcs.a;/opt/vc/lib/libvchiq_arm.so")
-endif ()
 
 # Building on a Mac requires Abseil
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")  # macOS
