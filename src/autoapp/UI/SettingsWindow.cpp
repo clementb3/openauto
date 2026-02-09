@@ -322,10 +322,10 @@ comboBoxBluetooth->addItem(QCoreApplication::translate("SettingsWindow", "none",
           aap_protobuf::service::media::sink::message::VideoCodecResolutionType::VIDEO_800x480);
     } else if (ui_->radioButton720p->isChecked()) {
       configuration_->setVideoResolution(
-          aap_protobuf::service::media::sink::message::VideoCodecResolutionType::VIDEO_1280x720);
+          aap_protobuf::service::media::sink::message::VideoCodecResolutionType::VIDEO_720x1280);
     } else if (ui_->radioButton1080p->isChecked()) {
       configuration_->setVideoResolution(
-          aap_protobuf::service::media::sink::message::VideoCodecResolutionType::VIDEO_1920x1080);
+          aap_protobuf::service::media::sink::message::VideoCodecResolutionType::VIDEO_1080x1920);
     }
 
     configuration_->setScreenDPI(static_cast<size_t>(ui_->horizontalSliderScreenDPI->value()));

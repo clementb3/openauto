@@ -75,7 +75,6 @@ namespace f1x
 					videoWidget_->setFocus();
 					videoWidget_->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
 					videoWidget_->raise();
-					videoWidget_->setFullScreen(true);
 					videoWidget_->show();
 					videoWidget_->activateWindow();
 
