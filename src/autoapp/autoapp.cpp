@@ -99,7 +99,7 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    boost::asio::io_serviwce ioService;
+    boost::asio::io_service ioService;
     boost::asio::io_service::work work(ioService);
     std::vector<std::thread> threadPool;
     startUSBWorkers(ioService, usbContext, threadPool);
