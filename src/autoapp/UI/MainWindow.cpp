@@ -131,11 +131,7 @@ namespace f1x
 					connect(ui_->pushButtonSettings, &QPushButton::clicked, this, &MainWindow::openSettings);
 					connect(ui_->pushButtonHeatting, &QPushButton::clicked, this, &MainWindow::openHeating);
 					connect(ui_->pushButtonVolume, &QPushButton::clicked, this, &MainWindow::showVolumeSlider);
-					connect(ui_->pushButtonDebug, &QPushButton::clicked, this, &MainWindow::createDebuglog);
 					connect(ui_->pushButtonBluetooth, &QPushButton::clicked, this, &MainWindow::setPairable);
-					connect(ui_->pushButtonWifi, &QPushButton::clicked, this, &MainWindow::openConnectDialog);
-					connect(ui_->pushButtonAndroidAuto, &QPushButton::clicked, this, &MainWindow::TriggerAppStart);
-					connect(ui_->pushButtonAndroidAuto, &QPushButton::clicked, this, &MainWindow::setRetryUSBConnect);
 					connect(volumeSlider_, &QSlider::valueChanged, this, &MainWindow::onVolumeChanged);
 					connect(volumeButon_, &QPushButton::clicked, this, &MainWindow::showVolume);
 
@@ -160,12 +156,6 @@ namespace f1x
 					QTimer* timer = new QTimer(this);
 					connect(timer, SIGNAL(timeout()), this, SLOT(showTime()));
 					timer->start(1000);
-
-					// show debug button if enabled
-					if (!this->systemDebugmode) {
-						ui_->pushButtonDebug->hide();
-					}
-
 
 					ui_->btDevice->hide();
 
@@ -193,19 +183,14 @@ namespace f1x
 
 					// hide wifi if not forced
 					if (!this->wifiButtonForce && !std::ifstream("/tmp/mobile_hotspot_detected")) {
-						ui_->AAWIFIWidget->hide();
 					}
 					else {
 						ui_->AAUSBWidget->hide();
 					}
 
 					if (std::ifstream("/tmp/temp_recent_list") || std::ifstream("/tmp/mobile_hotspot_detected")) {
-						ui_->pushButtonWifi->show();
-						ui_->pushButtonWifi->setFocus();
 					}
 					else {
-						ui_->pushButtonWifi->hide();
-						ui_->pushButtonNoWiFiDevice->show();
 					}
 
 					// set custom buttons if file enabled by trigger file
@@ -591,7 +576,6 @@ void f1x::openauto::autoapp::ui::MainWindow::updateAlpha()
 		ui_->pushButtonSettings->setStyleSheet(menu_button_style);
 		ui_->pushButtonHeatting->setStyleSheet(menu_button_style);
 		ui_->pushButtonHome->setStyleSheet(menu_button_style);
-		ui_->pushButtonWifi->setStyleSheet("QPushButton{background-color: rgba(252, 175, 62, " + alp + " ); outline-style: dotted; outline-color: #92a8d1; border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);} QPushButton:focus {border: 2px solid rgba(125,125,125,0.5);}");
 		ui_->pushButton_c1->setStyleSheet("QPushButton{background-color: rgba(" + this->custom_button_color_c1 + ", " + alp + " ); outline-style: dotted; outline-color: #92a8d1; border-radius: 4px; border: 2px solid rgba(255,255,255,0.5); color: rgb(255,255,255);} QPushButton:focus {border: 2px solid rgba(125,125,125,0.5);}");
 		ui_->pushButton_c2->setStyleSheet("QPushButton{background-color: rgba(" + this->custom_button_color_c2 + ", " + alp + " ); outline-style: dotted; outline-color: #92a8d1; border-radius: 4px; border: 2px solid rgba(255,255,255,0.5); color: rgb(255,255,255);} QPushButton:focus {border: 2px solid rgba(125,125,125,0.5);}");
 		ui_->pushButton_c3->setStyleSheet("QPushButton{background-color: rgba(" + this->custom_button_color_c3 + ", " + alp + " ); outline-style: dotted; outline-color: #92a8d1; border-radius: 4px; border: 2px solid rgba(255,255,255,0.5); color: rgb(255,255,255);} QPushButton:focus {border: 2px solid rgba(125,125,125,0.5);}");
@@ -601,11 +585,6 @@ void f1x::openauto::autoapp::ui::MainWindow::updateAlpha()
 		ui_->pushButtonDummy1->setStyleSheet("QPushButton{background-color: rgba(186, 189, 182, " + alp + " ); outline-style: dotted; outline-color: #92a8d1; border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);} QPushButton:focus {border: 2px solid rgba(125,125,125,0.5);}");
 		ui_->pushButtonDummy2->setStyleSheet("QPushButton{background-color: rgba(186, 189, 182, " + alp + " ); outline-style: dotted; outline-color: #92a8d1; border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);} QPushButton:focus {border: 2px solid rgba(125,125,125,0.5);}");
 		ui_->pushButtonDummy3->setStyleSheet("QPushButton{background-color: rgba(186, 189, 182, " + alp + " ); outline-style: dotted; outline-color: #92a8d1; border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);} QPushButton:focus {border: 2px solid rgba(125,125,125,0.5);}");
-		ui_->pushButtonDebug->setStyleSheet("QPushButton{background-color: rgba(85, 87, 83, " + alp + " ); outline-style: dotted; outline-color: #92a8d1; border-radius: 4px; border: 2px solid rgba(255,255,255,0.5);} QPushButton:focus {border: 2px solid rgba(125,125,125,0.5);}");
-		ui_->pushButtonAndroidAuto->setStyleSheet("QPushButton{background-color: rgba(48, 140, 198, " + alp + " ); outline-style: dotted; outline-color: #92a8d1; border: 2px solid rgba(255,255,255,0.5); color: rgb(255,255,255); border-bottom: 0px; border-top: 0px;} QPushButton:focus {border: 2px solid rgba(125,125,125,0.5);}");
-		ui_->labelAndroidAutoBottom->setStyleSheet("background-color: rgba(48, 140, 198, " + alp + " ); border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; border: 2px solid rgba(255,255,255,0.5); color: rgb(255,255,255); border-top: 0px;");
-		ui_->labelAndroidAutoTop->setStyleSheet("background-color: rgba(48, 140, 198, " + alp + " ); border-top-left-radius: 4px; border-top-right-radius: 4px; border: 2px solid rgba(255,255,255,0.5); color: rgb(255,255,255); border-bottom: 0px;");
-		ui_->pushButtonNoDevice->setStyleSheet("background-color: rgba(48, 140, 198, " + alp + " ); border-radius: 4px; border: 2px solid rgba(255,255,255,0.5); color: rgb(255,255,255);");
 	}
 }
 
@@ -847,7 +826,6 @@ void f1x::openauto::autoapp::ui::MainWindow::tmpChanged()
 	if (std::ifstream("/tmp/android_device")) {
 		if (ui_->ButtonAndroidAuto->isVisible() == false) {
 			ui_->ButtonAndroidAuto->show();
-			ui_->pushButtonNoDevice->hide();
 		}
 		try {
 			QFile deviceData(QString("/tmp/android_device"));
@@ -860,18 +838,14 @@ void f1x::openauto::autoapp::ui::MainWindow::tmpChanged()
 				linedate = data_date.readLine();
 			}
 			deviceData.close();
-			ui_->labelAndroidAutoBottom->setText(linedate.simplified().replace("_", " "));
 		}
 		catch (...) {
-			ui_->labelAndroidAutoBottom->setText("");
 		}
 	}
 	else {
 		if (ui_->ButtonAndroidAuto->isVisible() == true) {
-			ui_->pushButtonNoDevice->show();
 			ui_->ButtonAndroidAuto->hide();
 		}
-		ui_->labelAndroidAutoBottom->setText("");
 	}
 
 	// check if bluetooth pairable
@@ -908,38 +882,6 @@ void f1x::openauto::autoapp::ui::MainWindow::tmpChanged()
 	}
 
 	this->hotspotActive = check_file_exist("/tmp/hotspot_active");
-
-	// hide wifi if hotspot disabled and force wifi unselected
-	if (!this->hotspotActive && !std::ifstream("/tmp/mobile_hotspot_detected")) {
-		if (ui_->AAWIFIWidget->isVisible() == true) {
-			ui_->AAWIFIWidget->hide();
-			ui_->AAUSBWidget->show();
-		}
-	}
-	else {
-		if ((ui_->AAWIFIWidget->isVisible() == false)) {
-			ui_->AAWIFIWidget->show();
-			ui_->AAUSBWidget->hide();
-		}
-	}
-
-	if (std::ifstream("/tmp/temp_recent_list") || std::ifstream("/tmp/mobile_hotspot_detected")) {
-		if (ui_->pushButtonWifi->isVisible() == false) {
-			ui_->pushButtonWifi->show();
-			ui_->pushButtonWifi->setFocus();
-		}
-		if (ui_->pushButtonNoWiFiDevice->isVisible() == true) {
-			ui_->pushButtonNoWiFiDevice->hide();
-		}
-	}
-	else {
-		if (ui_->pushButtonWifi->isVisible() == true) {
-			ui_->pushButtonWifi->hide();
-		}
-		if (ui_->pushButtonNoWiFiDevice->isVisible() == false) {
-			ui_->pushButtonNoWiFiDevice->show();
-		}
-	}
 
 	// use big clock in classic gui?
 	if (this->configuration_->showBigClock()) {

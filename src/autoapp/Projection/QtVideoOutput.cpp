@@ -50,6 +50,8 @@ namespace f1x
 					if (mainWidget_ && mainWidget_->layout()) {
 						videoWidget_->setWindowFlags(Qt::Widget);
 						mainWidget_->layout()->addWidget(videoWidget_.get());
+						mainWidget_->layout()->setContentsMargins(0, 0, 0, 0);
+						mainWidget_->layout()->setSpacing(0);
 					}
 					else {
 						OPENAUTO_LOG(error) << "[QtVideoOutput] mainWidget is null or has no layout!";
