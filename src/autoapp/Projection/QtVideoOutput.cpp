@@ -46,7 +46,7 @@ namespace f1x
 
 					videoWidget_ = std::make_unique<QVideoWidget>(mainWidget_);
 					mediaPlayer_ = std::make_unique<QMediaPlayer>(nullptr, QMediaPlayer::StreamPlayback);
-
+					videoWidget_->setFixedSize(1080, 1750);
 					if (mainWidget_ && mainWidget_->layout()) {
 						videoWidget_->setWindowFlags(Qt::Widget);
 						mainWidget_->layout()->addWidget(videoWidget_.get());
