@@ -43,10 +43,12 @@ namespace f1x
 				void QtVideoOutput::createVideoOutput()
 				{
 					OPENAUTO_LOG(info) << "[QtVideoOutput] createVideoOutput()";
-					videoWidget_ = std::make_unique<QVideoWidget>();
+
+					videoWidget_ = std::make_unique<QVideoWidget>(mainWidget_);
 					mediaPlayer_ = std::make_unique<QMediaPlayer>(nullptr, QMediaPlayer::StreamPlayback);
+
 					if (mainWidget_ && mainWidget_->layout()) {
-						videoWidget_->setParent(mainWidget_);
+						videoWidget_->setWindowFlags(Qt::Widget);
 						mainWidget_->layout()->addWidget(videoWidget_.get());
 					}
 					else {
@@ -81,15 +83,19 @@ namespace f1x
 					videoWidget_->setAttribute(Qt::WA_OpaquePaintEvent, true);
 					videoWidget_->setAttribute(Qt::WA_NoSystemBackground, true);
 					videoWidget_->setAspectRatioMode(Qt::KeepAspectRatio);
+
+					// --- SUPPRIME OU COMMENTE CES LIGNES ---
+					// videoWidget_->setWindowFlags(Qt::Window | Qt::FramelessWindowHint); 
+					// videoWidget_->raise(); 
+					// videoWidget_->activateWindow();
+					// ---------------------------------------
+
 					videoWidget_->show();
 					videoWidget_->setFocus();
 
 					mediaPlayer_->setVideoOutput(videoWidget_.get());
 					mediaPlayer_->setMedia(QMediaContent(), &videoBuffer_);
 					mediaPlayer_->play();
-
-					// TODO: This only outputs a line if there's an error - FIXME - Output a proper status instead
-					OPENAUTO_LOG(debug) << "Player error state -> " << mediaPlayer_->errorString().toStdString();
 				}
 
 				void QtVideoOutput::onStopPlayback()
