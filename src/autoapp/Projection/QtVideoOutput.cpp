@@ -45,11 +45,12 @@ namespace f1x
 					OPENAUTO_LOG(info) << "[QtVideoOutput] createVideoOutput()";
 					videoWidget_ = std::make_unique<QVideoWidget>();
 					mediaPlayer_ = std::make_unique<QMediaPlayer>(nullptr, QMediaPlayer::StreamPlayback);
-					if (mainWidget_->layout()) {
+					if (mainWidget_ && mainWidget_->layout()) {
+						videoWidget_->setParent(mainWidget_);
 						mainWidget_->layout()->addWidget(videoWidget_.get());
 					}
 					else {
-						OPENAUTO_LOG(error) << "[QtVideoOutput] mainWidget has no layout!";
+						OPENAUTO_LOG(error) << "[QtVideoOutput] mainWidget is null or has no layout!";
 					}
 				}
 
@@ -80,11 +81,8 @@ namespace f1x
 					videoWidget_->setAttribute(Qt::WA_OpaquePaintEvent, true);
 					videoWidget_->setAttribute(Qt::WA_NoSystemBackground, true);
 					videoWidget_->setAspectRatioMode(Qt::KeepAspectRatio);
-					videoWidget_->setFocus();
-					videoWidget_->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
-					videoWidget_->raise();
 					videoWidget_->show();
-					videoWidget_->activateWindow();
+					videoWidget_->setFocus();
 
 					mediaPlayer_->setVideoOutput(videoWidget_.get());
 					mediaPlayer_->setMedia(QMediaContent(), &videoBuffer_);
