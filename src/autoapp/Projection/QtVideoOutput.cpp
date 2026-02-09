@@ -94,7 +94,7 @@ namespace f1x
 					// ---------------------------------------
 
 					videoWidget_->show();
-					videoWidget_->setFocus();
+					videoWidget_->setFocusPolicy(Qt::NoFocus); 
 
 					mediaPlayer_->setVideoOutput(videoWidget_.get());
 					mediaPlayer_->setMedia(QMediaContent(), &videoBuffer_);
