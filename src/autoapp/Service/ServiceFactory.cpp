@@ -46,12 +46,14 @@
 #include <f1x/openauto/autoapp/Projection/InputDevice.hpp>
 #include <f1x/openauto/autoapp/Projection/LocalBluetoothDevice.hpp>
 #include <f1x/openauto/autoapp/Projection/DummyBluetoothDevice.hpp>
+#include <f1x/openauto/autoapp/UI/MainWindow.hpp>
 
 namespace f1x::openauto::autoapp::service {
 
   ServiceFactory::ServiceFactory(boost::asio::io_service &ioService,
-                                 configuration::IConfiguration::Pointer configuration)
-      : ioService_(ioService), configuration_(std::move(configuration)) {
+                                 configuration::IConfiguration::Pointer configuration,
+      autoapp::ui::MainWindow& mainWindow)
+      : ioService_(ioService), configuration_(std::move(configuration)), mainWindow_(mainWindow) {
 
   }
 
@@ -179,7 +181,7 @@ namespace f1x::openauto::autoapp::service {
 #ifdef USE_OMX
     auto videoOutput(std::make_shared<projection::OMXVideoOutput>(configuration_));
 #else
-    projection::IVideoOutput::Pointer videoOutput(new projection::QtVideoOutput(configuration_),
+    projection::IVideoOutput::Pointer videoOutput(new projection::QtVideoOutput(configuration_, mainWindow_.getVideoWidget()),
                                                   std::bind(&QObject::deleteLater, std::placeholders::_1));
 #endif
 

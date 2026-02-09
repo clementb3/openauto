@@ -135,6 +135,9 @@ private slots:
     bool check_file_exist(const char *filename);
     void hostModeStateChanged(QBluetoothLocalDevice::HostMode);
 
+public slots:
+    QWidget* getVideoWidget();
+
 private:
     Ui::MainWindow* ui_;
     SettingsWindow *settingsPage_;

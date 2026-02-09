@@ -442,6 +442,10 @@ namespace f1x
 	}
 }
 
+QWidget* f1x::openauto::autoapp::ui::MainWindow::getVideoWidget() {
+	return ui_->telScreen;
+}
+
 void f1x::openauto::autoapp::ui::MainWindow::showVolume() {
 	volumeSlider_->show();
 	volumeSlider_->raise();

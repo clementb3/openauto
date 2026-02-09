@@ -19,6 +19,7 @@
 #include <QApplication>
 #include <f1x/openauto/autoapp/Projection/QtVideoOutput.hpp>
 #include <f1x/openauto/Common/Log.hpp>
+#include <QLayout>
 
 namespace f1x
 {
@@ -29,8 +30,9 @@ namespace f1x
 			namespace projection
 			{
 
-				QtVideoOutput::QtVideoOutput(configuration::IConfiguration::Pointer configuration)
-					: VideoOutput(std::move(configuration))
+				QtVideoOutput::QtVideoOutput(configuration::IConfiguration::Pointer configuration, QWidget* mainWidget)
+					: VideoOutput(std::move(configuration)),
+					mainWidget_(mainWidget)
 				{
 					this->moveToThread(QApplication::instance()->thread());
 					connect(this, &QtVideoOutput::startPlayback, this, &QtVideoOutput::onStartPlayback, Qt::QueuedConnection);
@@ -43,6 +45,12 @@ namespace f1x
 					OPENAUTO_LOG(info) << "[QtVideoOutput] createVideoOutput()";
 					videoWidget_ = std::make_unique<QVideoWidget>();
 					mediaPlayer_ = std::make_unique<QMediaPlayer>(nullptr, QMediaPlayer::StreamPlayback);
+					if (mainWidget_->layout()) {
+						mainWidget_->layout()->addWidget(videoWidget_.get());
+					}
+					else {
+						OPENAUTO_LOG(error) << "[QtVideoOutput] mainWidget has no layout!";
+					}
 				}
 
 
