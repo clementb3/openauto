@@ -108,7 +108,6 @@ private slots:
     void updateAlpha();
 
 private slots:
-    void on_pushButtonBrightness_clicked();
     void showTime();
     void createDebuglog();
     void setPairable();

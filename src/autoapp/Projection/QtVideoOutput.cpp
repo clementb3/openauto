@@ -71,7 +71,7 @@ namespace f1x
 				{
 					videoWidget_->setAttribute(Qt::WA_OpaquePaintEvent, true);
 					videoWidget_->setAttribute(Qt::WA_NoSystemBackground, true);
-					videoWidget_->setAspectRatioMode(Qt::IgnoreAspectRatio);
+					videoWidget_->setAspectRatioMode(Qt::KeepAspectRatio);
 					videoWidget_->setFocus();
 					videoWidget_->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
 					videoWidget_->raise();
