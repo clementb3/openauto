@@ -89,7 +89,7 @@ namespace f1x
 					this->wallpaperEQFileExists = check_file_exist("wallpaper-eq.png");
 
 					ui_->setupUi(this);
-
+					setupCan();
 					volumeButon_ = new QPushButton("", this);
 					volumeButon_->setFixedSize(80, 80);
 					QIcon icon(":/sound.png");
@@ -276,6 +276,22 @@ namespace f1x
 			}
 		}
 	}
+}
+
+void f1x::openauto::autoapp::ui::MainWindow::setupCan() {
+	QThread* thread = new QThread;
+	CanService* canService = new CanService();
+
+	canService->moveToThread(thread);
+
+	connect(canService, &CanService::messageReceived, this, &f1x::openauto::autoapp::ui::MainWindow::onCanMessageReceived);
+
+	connect(thread, &QThread::started, canService, &CanService::process);
+	thread->start();
+}
+
+void f1x::openauto::autoapp::ui::MainWindow::onCanMessageReceived(CanMessage msg) {
+
 }
 
 QWidget* f1x::openauto::autoapp::ui::MainWindow::getVideoWidget() {

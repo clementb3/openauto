@@ -24,6 +24,7 @@
 #include <f1x/openauto/autoapp/Configuration/IConfiguration.hpp>
 #include <f1x/openauto/autoapp/UI/SettingsWindow.hpp>
 #include <f1x/openauto/autoapp/UI/HeatingWindow.hpp>
+#include <f1x/openauto/autoapp/Service/Can/CanService.hpp>
 
 #include <QMediaPlayer>
 #include <QListWidgetItem>
@@ -134,6 +135,8 @@ private slots:
     void updateNetworkInfo();
     bool check_file_exist(const char *filename);
     void hostModeStateChanged(QBluetoothLocalDevice::HostMode);
+    void setupCan();
+    void onCanMessageReceived(CanMessage msg);
 
 public slots:
     QWidget* getVideoWidget();

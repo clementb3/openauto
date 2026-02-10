@@ -51,7 +51,7 @@ namespace f1x
 						videoWidget_->setWindowFlags(Qt::Widget);
 						mainWidget_->layout()->addWidget(videoWidget_.get());
 						mainWidget_->updateGeometry();
-						mainWidget_->layout()->setContentsMargins(0, 0, 0, 0);
+						mainWidget_->layout()->setContentsMargins(22.5, 0, 22.5, 0);
 						mainWidget_->layout()->setSpacing(0);
 					}
 					else {
