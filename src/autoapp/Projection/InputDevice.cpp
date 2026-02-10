@@ -220,7 +220,7 @@ namespace f1x
 						return false;
 					}
 					//slider sound
-					if (mouse->pos().x()>15 && mouse->pos().x()<95 && mouse->pos().y() >1080/2-200 && mouse->pos().y() < 1080/2 +200)
+					if (mouse->pos().x()>15 && mouse->pos().x()<95 && mouse->pos().y() >1080/2+200 && mouse->pos().y() < 1080/2 +600)
 					{
 						return false;
 					}
