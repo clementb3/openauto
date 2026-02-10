@@ -117,7 +117,7 @@ namespace f1x::openauto::autoapp::service {
     QRect screenGeometry = screen == nullptr ? QRect(0, 0, 1, 1) : screen->geometry();
     projection::IInputDevice::Pointer inputDevice(
         std::make_shared<projection::InputDevice>(*QApplication::instance(), configuration_,
-                                                  std::move(screenGeometry), std::move(videoGeometry)));
+                                                  std::move(screenGeometry), std::move(videoGeometry), mainWindow_));
 
     return std::make_shared<inputsource::InputSourceService>(ioService_, messenger, std::move(inputDevice));
   }

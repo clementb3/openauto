@@ -147,6 +147,9 @@ private:
     void onCanMessageReceived(const f1x::openauto::autoapp::service::CanMessage& msg);
     void sendCanMessage(uint32_t idCan, QByteArray data);
 
+public:
+    int getTabWidgetIndex();
+
 private:
     Ui::MainWindow* ui_;
     SettingsWindow *settingsPage_;

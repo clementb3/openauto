@@ -282,6 +282,10 @@ namespace f1x
 	}
 }
 
+int f1x::openauto::autoapp::ui::MainWindow::getTabWidgetIndex() {
+	return ui_->menuStacked->currentIndex();
+}
+
 void f1x::openauto::autoapp::ui::MainWindow::setupCanService() {
 	qRegisterMetaType<f1x::openauto::autoapp::service::CanMessage>("CanMessage");
 	m_canThread = new QThread(this);

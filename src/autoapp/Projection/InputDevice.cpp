@@ -29,12 +29,13 @@ namespace f1x
 			namespace projection
 			{
 
-				InputDevice::InputDevice(QObject& parent, configuration::IConfiguration::Pointer configuration, const QRect& touchscreenGeometry, const QRect& displayGeometry)
+				InputDevice::InputDevice(QObject& parent, configuration::IConfiguration::Pointer configuration, const QRect& touchscreenGeometry, const QRect& displayGeometry, autoapp::ui::MainWindow& mainWindow)
 					: parent_(parent)
 					, configuration_(std::move(configuration))
 					, touchscreenGeometry_(touchscreenGeometry)
 					, displayGeometry_(displayGeometry)
 					, eventHandler_(nullptr)
+					, mainWindow_(mainWindow)
 				{
 					this->moveToThread(parent.thread());
 				}
@@ -189,7 +190,9 @@ namespace f1x
 
 				bool InputDevice::handleTouchEvent(QEvent* event)
 				{
-					if (!configuration_->getTouchscreenEnabled())
+
+
+					if (!configuration_->getTouchscreenEnabled() || mainWindow_.getTabWidgetIndex() != 1)
 					{
 						return false;
 					}
@@ -216,11 +219,6 @@ namespace f1x
 					QMouseEvent* mouse = static_cast<QMouseEvent*>(event);
 					//header
 					if (mouse->pos().y()<75)
-					{
-						return false;
-					}
-					//slider sound
-					if (mouse->pos().x()>15 && mouse->pos().x()<95 && mouse->pos().y() >1080/2+200 && mouse->pos().y() < 1080/2 +600)
 					{
 						return false;
 					}
