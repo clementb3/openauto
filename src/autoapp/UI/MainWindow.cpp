@@ -58,7 +58,7 @@ namespace f1x
 					, localDevice(new QBluetoothLocalDevice)
 				{
 					// set default bg color to black
-					this->setStyleSheet("QMainWindow {background-color: rgb(0,0,0);}");
+					//this->setStyleSheet("QMainWindow {background-color: rgb(0,0,0);}");
 
 					// Set default font and size
 					int id = QFontDatabase::addApplicationFont(":/Roboto-Regular.ttf");

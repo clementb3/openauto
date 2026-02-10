@@ -214,7 +214,13 @@ namespace f1x
 
 
 					QMouseEvent* mouse = static_cast<QMouseEvent*>(event);
+					//header
 					if (mouse->pos().y()<75)
+					{
+						return false;
+					}
+					//slider sound
+					if (mouse->pos().x()>15 && mouse->pos().x()<95 && mouse->pos().y() >1080/2-200 && mouse->pos().y() < 1080/2 +200)
 					{
 						return false;
 					}
