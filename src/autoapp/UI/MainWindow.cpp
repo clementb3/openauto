@@ -298,9 +298,10 @@ void f1x::openauto::autoapp::ui::MainWindow::setupCanService() {
 
 void f1x::openauto::autoapp::ui::MainWindow::onCanMessageReceived(const f1x::openauto::autoapp::service::CanMessage& msg) {
 	QString dataHex = msg.data.toHex(' ').toUpper();
-	if (msg.id == 0x1CA)
+	if (msg.id == 0x1CA && msg.data.size() >= 4)
 	{
-		switch (qFromBigEndian<uint32_t>(msg.data.data()))
+		uint32_t command = qFromBigEndian<uint32_t>(reinterpret_cast<const uchar*>(msg.data.data()));
+		switch (command)
 		{
 			case 0x03100000:
 				downVolume();
@@ -313,7 +314,7 @@ void f1x::openauto::autoapp::ui::MainWindow::onCanMessageReceived(const f1x::ope
 		}
 	}
 
-	OPENAUTO_LOG(debug) << "[UI] Message CAN reçu ID: " << std::hex << msg.id;
+	OPENAUTO_LOG(debug) << "[UI] Message CAN receive ID: " << std::hex << msg.id << "[data="<< dataHex<<"]";
 }
 
 // Exemple d'envoi
