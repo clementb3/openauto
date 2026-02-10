@@ -150,7 +150,7 @@ namespace f1x {
 
           void AudioMediaSinkService::onChannelError(const aasdk::error::Error &e) {
             //OPENAUTO_LOG(error) << "[AudioMediaSinkService] onChannelError(): " << e.what()
-                                << ", channel: " << aasdk::messenger::channelIdToString(channel_->getId());
+//                               << ", channel: " << aasdk::messenger::channelIdToString(channel_->getId());
           }
 
           /*
