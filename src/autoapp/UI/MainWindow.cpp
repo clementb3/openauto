@@ -319,7 +319,7 @@ void f1x::openauto::autoapp::ui::MainWindow::onCanMessageReceived(const f1x::ope
 	ss << std::hex << std::uppercase << msg.id;
 	std::string idHex = ss.str();
 
-	OPENAUTO_LOG(debug) << "[UI] Message CAN receive ID: " << idHex << "[data="<< dataHex<<"]";
+	OPENAUTO_LOG(debug) << "[UI] Message CAN receive ID: " << idHex << "[data="<< dataHex.toStdString() <<"]";
 }
 
 void f1x::openauto::autoapp::ui::MainWindow::sendCanMessage(uint32_t idCan, QByteArray data) {
