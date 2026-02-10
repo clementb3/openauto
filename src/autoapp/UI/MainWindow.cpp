@@ -40,6 +40,7 @@
 #include <unistd.h>
 #include <f1x/openauto/Common/Log.hpp>
 #include <QDebug>
+#include <QMetaType>
 
 namespace f1x
 {
@@ -279,6 +280,7 @@ namespace f1x
 }
 
 void f1x::openauto::autoapp::ui::MainWindow::setupCanService() {
+	qRegisterMetaType<f1x::openauto::autoapp::service::CanMessage>("CanMessage");
 	m_canThread = new QThread(this);
 	m_canService = new f1x::openauto::autoapp::service::CanService();
 
@@ -296,6 +298,21 @@ void f1x::openauto::autoapp::ui::MainWindow::setupCanService() {
 
 void f1x::openauto::autoapp::ui::MainWindow::onCanMessageReceived(const f1x::openauto::autoapp::service::CanMessage& msg) {
 	QString dataHex = msg.data.toHex(' ').toUpper();
+	if (msg.id == 0x1CA)
+	{
+		switch (qFromBigEndian<uint32_t>(msg.data.data()))
+		{
+			case 0x03100000:
+				downVolume();
+				break;
+			case 0x03200000:
+				upVolume();
+				break;
+		default:
+			break;
+		}
+	}
+
 	OPENAUTO_LOG(debug) << "[UI] Message CAN reçu ID: " << std::hex << msg.id;
 }
 
@@ -312,6 +329,20 @@ void f1x::openauto::autoapp::ui::MainWindow::sendCanMessage() {
 
 QWidget* f1x::openauto::autoapp::ui::MainWindow::getVideoWidget() {
 	return ui_->telScreen;
+}
+
+void f1x::openauto::autoapp::ui::MainWindow::upVolume() {
+	volumeSlider_->show();
+	volumeSlider_->raise();
+	volumeSlider_->setValue(volumeSlider_->value() + 5);
+	onVolumeChanged(volumeSlider_->value());
+}
+
+void f1x::openauto::autoapp::ui::MainWindow::downVolume() {
+	volumeSlider_->show();
+	volumeSlider_->raise();
+	volumeSlider_->setValue(volumeSlider_->value() - 5);
+	onVolumeChanged(volumeSlider_->value());
 }
 
 void f1x::openauto::autoapp::ui::MainWindow::showVolume() {
