@@ -211,7 +211,13 @@ namespace f1x
 						return true;
 					};
 
+
+
 					QMouseEvent* mouse = static_cast<QMouseEvent*>(event);
+					if (mouse->pos().y()<75)
+					{
+						return false;
+					}
 					if (event->type() == QEvent::MouseButtonRelease || mouse->buttons().testFlag(Qt::LeftButton))
 					{
 						const uint32_t x = (static_cast<float>(mouse->pos().x()) / 1035) * 1080;
