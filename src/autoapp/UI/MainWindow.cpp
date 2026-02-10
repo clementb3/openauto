@@ -94,6 +94,8 @@ namespace f1x
 					setupCanService();
 					volumeButon_ = new QPushButton("", this);
 					volumeButon_->setFixedSize(80, 80);
+					volumeButon_->setFlat(true);
+					volumeButon_->setAttribute(Qt::WA_TranslucentBackground);
 					QIcon icon(":/sound.png");
 					volumeButon_->setIcon(icon);
 					volumeButon_->setIconSize(QSize(48, 48)); // Ajuste la taille de l'image
