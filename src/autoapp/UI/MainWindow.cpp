@@ -41,6 +41,7 @@
 #include <f1x/openauto/Common/Log.hpp>
 #include <QDebug>
 #include <QMetaType>
+#include <sstream>
 
 namespace f1x
 {
@@ -314,7 +315,11 @@ void f1x::openauto::autoapp::ui::MainWindow::onCanMessageReceived(const f1x::ope
 		}
 	}
 
-	OPENAUTO_LOG(debug) << "[UI] Message CAN receive ID: " << std::hex << msg.id << "[data="<< dataHex<<"]";
+	std::stringstream ss;
+	ss << std::hex << std::uppercase << msg.id;
+	std::string idHex = ss.str();
+
+	OPENAUTO_LOG(debug) << "[UI] Message CAN receive ID: " << idHex << "[data="<< dataHex<<"]";
 }
 
 void f1x::openauto::autoapp::ui::MainWindow::sendCanMessage(uint32_t idCan, QByteArray data) {
