@@ -89,7 +89,7 @@ namespace f1x
 					this->wallpaperEQFileExists = check_file_exist("wallpaper-eq.png");
 
 					ui_->setupUi(this);
-					setupCan();
+					setupCanService();
 					volumeButon_ = new QPushButton("", this);
 					volumeButon_->setFixedSize(80, 80);
 					QIcon icon(":/sound.png");
