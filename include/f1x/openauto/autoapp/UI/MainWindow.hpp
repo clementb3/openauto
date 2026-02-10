@@ -145,7 +145,7 @@ private:
     void downVolume();
 	void setupCanService();
     void onCanMessageReceived(const f1x::openauto::autoapp::service::CanMessage& msg);
-    void sendCanMessage();
+    void sendCanMessage(uint32_t idCan, QByteArray data);
 
 private:
     Ui::MainWindow* ui_;

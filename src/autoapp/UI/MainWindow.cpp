@@ -317,14 +317,9 @@ void f1x::openauto::autoapp::ui::MainWindow::onCanMessageReceived(const f1x::ope
 	OPENAUTO_LOG(debug) << "[UI] Message CAN receive ID: " << std::hex << msg.id << "[data="<< dataHex<<"]";
 }
 
-// Exemple d'envoi
-void f1x::openauto::autoapp::ui::MainWindow::sendCanMessage() {
+void f1x::openauto::autoapp::ui::MainWindow::sendCanMessage(uint32_t idCan, QByteArray data) {
 	if (m_canService) {
-		QByteArray data;
-		data.append(0xDE);
-		data.append(0xAD);
-		// On appelle directement le slot, Qt gérera le passage entre threads
-		m_canService->sendMessage(0x123, data);
+		m_canService->sendMessage(idCan, data);
 	}
 }
 
