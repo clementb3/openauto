@@ -79,7 +79,7 @@ namespace f1x {
               auto touchscreenConfig = inputChannel->add_touchscreen();
 
               touchscreenConfig->set_width(touchscreenSurface.width());
-              touchscreenConfig->set_height(touchscreenSurface.height()-75);
+              touchscreenConfig->set_height(touchscreenSurface.height());
             }
           }
 

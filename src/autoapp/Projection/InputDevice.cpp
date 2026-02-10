@@ -73,6 +73,7 @@ namespace f1x
 						}
 						else if (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseButtonRelease || event->type() == QEvent::MouseMove)
 						{
+							OPENAUTO_LOG(debug) << "[InputDevice] eventFilter() - valid event"<< this->handleTouchEvent(event);
 							return this->handleTouchEvent(event);
 						}
 					}
@@ -213,8 +214,8 @@ namespace f1x
 					QMouseEvent* mouse = static_cast<QMouseEvent*>(event);
 					if (event->type() == QEvent::MouseButtonRelease || mouse->buttons().testFlag(Qt::LeftButton))
 					{
-						const uint32_t x = ((static_cast<float>(mouse->pos().x()) - 22.5) / 1035) * 1080;
-						const uint32_t y = ((static_cast<float>(mouse->pos().y()) - 80) / 1840) * 1920;
+						const uint32_t x = (static_cast<float>(mouse->pos().x()) / 1035) * 1080;
+						const uint32_t y = (static_cast<float>(mouse->pos().y())/ 1840) * 1920;
 						eventHandler_->onTouchEvent({ type, x, y, 0 });
 					}
 
