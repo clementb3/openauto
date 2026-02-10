@@ -103,6 +103,7 @@ signals:
     void TriggerAppStart();
     void TriggerAppStop();
     void CloseAllDialogs();
+    void setupCanService();
 
 private slots:
     void on_horizontalSliderBrightness_valueChanged(int value);
@@ -135,8 +136,8 @@ private slots:
     void updateNetworkInfo();
     bool check_file_exist(const char *filename);
     void hostModeStateChanged(QBluetoothLocalDevice::HostMode);
-    void setupCan();
-    void onCanMessageReceived(CanMessage msg);
+    void onCanMessageReceived(const f1x::openauto::autoapp::service::CanMessage &msg);
+    void sendCanMessage();
 
 public slots:
     QWidget* getVideoWidget();
@@ -255,6 +256,9 @@ private:
     int camera_zoom;
 
     QBluetoothLocalDevice *localDevice;
+
+    f1x::openauto::autoapp::service::CanService *m_canService;
+    QThread *m_canThread;
 
 protected:
     void keyPressEvent(QKeyEvent *event);

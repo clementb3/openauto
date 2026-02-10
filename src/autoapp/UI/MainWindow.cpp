@@ -278,20 +278,36 @@ namespace f1x
 	}
 }
 
-void f1x::openauto::autoapp::ui::MainWindow::setupCan() {
-	QThread* thread = new QThread;
-	CanService* canService = new CanService();
+void f1x::openauto::autoapp::ui::MainWindow::setupCanService() {
+	m_canThread = new QThread(this);
+	m_canService = new f1x::openauto::autoapp::service::CanService();
 
-	canService->moveToThread(thread);
+	if (m_canService->init("can0")) {
+		m_canService->moveToThread(m_canThread);
+		
+		connect(m_canThread, &QThread::started, m_canService, &f1x::openauto::autoapp::service::CanService::process);
+		connect(m_canService, &f1x::openauto::autoapp::service::CanService::messageReceived,
+			this, &MainWindow::onCanMessageReceived);
+		connect(m_canThread, &QThread::finished, m_canService, &QObject::deleteLater);
 
-	connect(canService, &CanService::messageReceived, this, &f1x::openauto::autoapp::ui::MainWindow::onCanMessageReceived);
-
-	connect(thread, &QThread::started, canService, &CanService::process);
-	thread->start();
+		m_canThread->start();
+	}
 }
 
-void f1x::openauto::autoapp::ui::MainWindow::onCanMessageReceived(CanMessage msg) {
+void f1x::openauto::autoapp::ui::MainWindow::onCanMessageReceived(const f1x::openauto::autoapp::service::CanMessage& msg) {
+	QString dataHex = msg.data.toHex(' ').toUpper();
+	OPENAUTO_LOG(debug) << "[UI] Message CAN reçu ID: " << std::hex << msg.id;
+}
 
+// Exemple d'envoi
+void f1x::openauto::autoapp::ui::MainWindow::sendCanMessage() {
+	if (m_canService) {
+		QByteArray data;
+		data.append(0xDE);
+		data.append(0xAD);
+		// On appelle directement le slot, Qt gérera le passage entre threads
+		m_canService->sendMessage(0x123, data);
+	}
 }
 
 QWidget* f1x::openauto::autoapp::ui::MainWindow::getVideoWidget() {
