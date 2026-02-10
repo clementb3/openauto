@@ -64,6 +64,8 @@ namespace f1x
 
 					if (eventHandler_ != nullptr)
 					{
+						OPENAUTO_LOG(debug) << "[InputDevice] handleTouchEvent() - index tab: " << mainWindow_.getTabWidgetIndex();
+
 						if (event->type() == QEvent::KeyPress || event->type() == QEvent::KeyRelease)
 						{
 							QKeyEvent* key = static_cast<QKeyEvent*>(event);
@@ -191,7 +193,6 @@ namespace f1x
 				bool InputDevice::handleTouchEvent(QEvent* event)
 				{
 
-					OPENAUTO_LOG(debug) << "[InputDevice] handleTouchEvent() - index tab: " << mainWindow_.getTabWidgetIndex();
 					if (!configuration_->getTouchscreenEnabled() || mainWindow_.getTabWidgetIndex() != 1)
 					{
 						return false;
