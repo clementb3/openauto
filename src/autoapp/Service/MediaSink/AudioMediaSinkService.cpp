@@ -34,32 +34,32 @@ namespace f1x {
 
           void AudioMediaSinkService::start() {
             strand_.dispatch([this, self = this->shared_from_this()]() {
-              OPENAUTO_LOG(info) << "[AudioMediaSinkService] start()";
-              OPENAUTO_LOG(info) << "[AudioMediaSinkService] Channel " << aasdk::messenger::channelIdToString(channel_->getId());
+              //OPENAUTO_LOG(info) << "[AudioMediaSinkService] start()";
+              //OPENAUTO_LOG(info) << "[AudioMediaSinkService] Channel " << aasdk::messenger::channelIdToString(channel_->getId());
               channel_->receive(this->shared_from_this());
             });
           }
 
           void AudioMediaSinkService::stop() {
             strand_.dispatch([this, self = this->shared_from_this()]() {
-              OPENAUTO_LOG(info) << "[AudioMediaSinkService] stop()";
-              OPENAUTO_LOG(info) << "[AudioMediaSinkService] Channel " << aasdk::messenger::channelIdToString(channel_->getId());
+              //OPENAUTO_LOG(info) << "[AudioMediaSinkService] stop()";
+              //OPENAUTO_LOG(info) << "[AudioMediaSinkService] Channel " << aasdk::messenger::channelIdToString(channel_->getId());
               audioOutput_->stop();
             });
           }
 
           void AudioMediaSinkService::pause() {
             strand_.dispatch([this, self = this->shared_from_this()]() {
-              OPENAUTO_LOG(info) << "[AudioMediaSinkService] pause()";
-              OPENAUTO_LOG(info) << "[AudioMediaSinkService] Channel " << aasdk::messenger::channelIdToString(channel_->getId());
+              //OPENAUTO_LOG(info) << "[AudioMediaSinkService] pause()";
+              //OPENAUTO_LOG(info) << "[AudioMediaSinkService] Channel " << aasdk::messenger::channelIdToString(channel_->getId());
 
             });
           }
 
           void AudioMediaSinkService::resume() {
             strand_.dispatch([this, self = this->shared_from_this()]() {
-              OPENAUTO_LOG(info) << "[AudioMediaSinkService] resume()";
-              OPENAUTO_LOG(info) << "[AudioMediaSinkService] Channel " << aasdk::messenger::channelIdToString(channel_->getId());
+              //OPENAUTO_LOG(info) << "[AudioMediaSinkService] resume()";
+              //OPENAUTO_LOG(info) << "[AudioMediaSinkService] Channel " << aasdk::messenger::channelIdToString(channel_->getId());
 
             });
           }
@@ -70,8 +70,8 @@ namespace f1x {
 
           void AudioMediaSinkService::fillFeatures(
               aap_protobuf::service::control::message::ServiceDiscoveryResponse &response) {
-            OPENAUTO_LOG(info) << "[AudioMediaSinkService] fillFeatures()";
-            OPENAUTO_LOG(info) << "[AudioMediaSinkService] Channel: " << aasdk::messenger::channelIdToString(channel_->getId());
+            //OPENAUTO_LOG(info) << "[AudioMediaSinkService] fillFeatures()";
+            //OPENAUTO_LOG(info) << "[AudioMediaSinkService] Channel: " << aasdk::messenger::channelIdToString(channel_->getId());
 
             auto *service = response.add_channels();
             service->set_id(static_cast<uint32_t>(channel_->getId()));
@@ -83,29 +83,29 @@ namespace f1x {
 
             switch (channel_->getId()) {
               case aasdk::messenger::ChannelId::MEDIA_SINK_SYSTEM_AUDIO:
-                OPENAUTO_LOG(info) << "[AudioMediaSinkService] System Audio.";
+                //OPENAUTO_LOG(info) << "[AudioMediaSinkService] System Audio.";
                 audioChannel->set_audio_type(
                     aap_protobuf::service::media::sink::message::AudioStreamType::AUDIO_STREAM_SYSTEM_AUDIO);
                 break;
 
               case aasdk::messenger::ChannelId::MEDIA_SINK_MEDIA_AUDIO:
-                OPENAUTO_LOG(info) << "[AudioMediaSinkService] Music Audio.";
+                //OPENAUTO_LOG(info) << "[AudioMediaSinkService] Music Audio.";
                 audioChannel->set_audio_type(aap_protobuf::service::media::sink::message::AudioStreamType::AUDIO_STREAM_MEDIA);
                 break;
 
               case aasdk::messenger::ChannelId::MEDIA_SINK_GUIDANCE_AUDIO:
-                OPENAUTO_LOG(info) << "[AudioMediaSinkService] Guidance Audio.";
+                //OPENAUTO_LOG(info) << "[AudioMediaSinkService] Guidance Audio.";
                 audioChannel->set_audio_type(
                     aap_protobuf::service::media::sink::message::AudioStreamType::AUDIO_STREAM_GUIDANCE);
                 break;
 
               case aasdk::messenger::ChannelId::MEDIA_SINK_TELEPHONY_AUDIO:
-                OPENAUTO_LOG(info) << "[AudioMediaSinkService] Telephony Audio.";
+                //OPENAUTO_LOG(info) << "[AudioMediaSinkService] Telephony Audio.";
                 audioChannel->set_audio_type(
                     aap_protobuf::service::media::sink::message::AudioStreamType::AUDIO_STREAM_TELEPHONY);
                 break;
               default:
-                OPENAUTO_LOG(info) << "[AudioMediaSinkService] Unknown Audio.";
+                //OPENAUTO_LOG(info) << "[AudioMediaSinkService] Unknown Audio.";
                 break;
             }
 
@@ -116,10 +116,10 @@ namespace f1x {
             audioConfig->set_number_of_bits(audioOutput_->getSampleSize());
             audioConfig->set_number_of_channels(audioOutput_->getChannelCount());
 
-            OPENAUTO_LOG(info) << "[AudioMediaSinkService] getSampleRate " << audioOutput_->getSampleRate();
-            OPENAUTO_LOG(info) << "[AudioMediaSinkService] getSampleSize " << audioOutput_->getSampleSize();
-            OPENAUTO_LOG(info) << "[AudioMediaSinkService] getChannelCount " << audioOutput_->getChannelCount();
-            //OPENAUTO_LOG(info) << "[AudioMediaSinkService] SampleRate " << audioConfig->sampling_rate() << " / " << audioConfig->number_of_bits() << " / " << audioConfig->number_of_channels();
+            //OPENAUTO_LOG(info) << "[AudioMediaSinkService] getSampleRate " << audioOutput_->getSampleRate();
+            //OPENAUTO_LOG(info) << "[AudioMediaSinkService] getSampleSize " << audioOutput_->getSampleSize();
+            //OPENAUTO_LOG(info) << "[AudioMediaSinkService] getChannelCount " << audioOutput_->getChannelCount();
+            ////OPENAUTO_LOG(info) << "[AudioMediaSinkService] SampleRate " << audioConfig->sampling_rate() << " / " << audioConfig->number_of_bits() << " / " << audioConfig->number_of_channels();
           }
 
           /*
@@ -127,16 +127,16 @@ namespace f1x {
            */
 
           void AudioMediaSinkService::onChannelOpenRequest(const aap_protobuf::service::control::message::ChannelOpenRequest &request) {
-            OPENAUTO_LOG(info) << "[AudioMediaSinkService] onChannelOpenRequest()";
-            OPENAUTO_LOG(info) << "[AudioMediaSinkService] Channel Id: " << request.service_id() << ", Priority: " << request.priority();
+            //OPENAUTO_LOG(info) << "[AudioMediaSinkService] onChannelOpenRequest()";
+            //OPENAUTO_LOG(info) << "[AudioMediaSinkService] Channel Id: " << request.service_id() << ", Priority: " << request.priority();
 
-            OPENAUTO_LOG(info) << "[AudioMediaSinkService] Sample Rate: " << audioOutput_->getSampleRate() << ", Sample Size: " << audioOutput_->getSampleSize() << ", Audio Channels: " << audioOutput_->getChannelCount();
+            //OPENAUTO_LOG(info) << "[AudioMediaSinkService] Sample Rate: " << audioOutput_->getSampleRate() << ", Sample Size: " << audioOutput_->getSampleSize() << ", Audio Channels: " << audioOutput_->getChannelCount();
 
             const aap_protobuf::shared::MessageStatus status = audioOutput_->open()
                                                                ? aap_protobuf::shared::MessageStatus::STATUS_SUCCESS
                                                                : aap_protobuf::shared::MessageStatus::STATUS_INVALID_CHANNEL;
 
-            OPENAUTO_LOG(debug) << "[AudioMediaSinkService] Status determined: " << aap_protobuf::shared::MessageStatus_Name(status);
+            //OPENAUTO_LOG(debug) << "[AudioMediaSinkService] Status determined: " << aap_protobuf::shared::MessageStatus_Name(status);
 
             aap_protobuf::service::control::message::ChannelOpenResponse response;
             response.set_status(status);
@@ -149,7 +149,7 @@ namespace f1x {
           }
 
           void AudioMediaSinkService::onChannelError(const aasdk::error::Error &e) {
-            OPENAUTO_LOG(error) << "[AudioMediaSinkService] onChannelError(): " << e.what()
+            //OPENAUTO_LOG(error) << "[AudioMediaSinkService] onChannelError(): " << e.what()
                                 << ", channel: " << aasdk::messenger::channelIdToString(channel_->getId());
           }
 
@@ -158,8 +158,8 @@ namespace f1x {
            */
 
           void AudioMediaSinkService::onMediaChannelSetupRequest(const aap_protobuf::service::media::shared::message::Setup &request) {
-            OPENAUTO_LOG(info) << "[AudioMediaSinkService] onMediaChannelSetupRequest()";
-            OPENAUTO_LOG(info) << "[AudioMediaSinkService] Channel Id: " << aasdk::messenger::channelIdToString(channel_->getId()) << ", Codec: " << MediaCodecType_Name(request.type());
+            //OPENAUTO_LOG(info) << "[AudioMediaSinkService] onMediaChannelSetupRequest()";
+            //OPENAUTO_LOG(info) << "[AudioMediaSinkService] Channel Id: " << aasdk::messenger::channelIdToString(channel_->getId()) << ", Codec: " << MediaCodecType_Name(request.type());
 
             aap_protobuf::service::media::shared::message::Config response;
             auto status = aap_protobuf::service::media::shared::message::Config::STATUS_READY;
@@ -177,16 +177,16 @@ namespace f1x {
 
 
           void AudioMediaSinkService::onMediaChannelStartIndication(const aap_protobuf::service::media::shared::message::Start &indication) {
-            OPENAUTO_LOG(info) << "[AudioMediaSinkService] onMediaChannelStartIndication()";
-            OPENAUTO_LOG(info) << "[AudioMediaSinkService] Channel Id: " << aasdk::messenger::channelIdToString(channel_->getId()) << ", session: " << indication.session_id();
+            //OPENAUTO_LOG(info) << "[AudioMediaSinkService] onMediaChannelStartIndication()";
+            //OPENAUTO_LOG(info) << "[AudioMediaSinkService] Channel Id: " << aasdk::messenger::channelIdToString(channel_->getId()) << ", session: " << indication.session_id();
             session_ = indication.session_id();
             audioOutput_->start();
             channel_->receive(this->shared_from_this());
           }
 
           void AudioMediaSinkService::onMediaChannelStopIndication(const aap_protobuf::service::media::shared::message::Stop &indication) {
-            OPENAUTO_LOG(info) << "[AudioMediaSinkService] onMediaChannelStopIndication()";
-            OPENAUTO_LOG(info) << "[AudioMediaSinkService] Channel Id: " << aasdk::messenger::channelIdToString(channel_->getId()) << ", session: " << session_;
+            //OPENAUTO_LOG(info) << "[AudioMediaSinkService] onMediaChannelStopIndication()";
+            //OPENAUTO_LOG(info) << "[AudioMediaSinkService] Channel Id: " << aasdk::messenger::channelIdToString(channel_->getId()) << ", session: " << session_;
 
             session_ = -1;
             audioOutput_->suspend();
@@ -213,7 +213,7 @@ namespace f1x {
           }
 
           void AudioMediaSinkService::onMediaIndication(const aasdk::common::DataConstBuffer &buffer) {
-            OPENAUTO_LOG(info) << "[AudioMediaSinkService] onMediaIndication()";
+            //OPENAUTO_LOG(info) << "[AudioMediaSinkService] onMediaIndication()";
 
             this->onMediaWithTimestampIndication(0, buffer);
           }
