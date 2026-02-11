@@ -85,7 +85,7 @@ namespace f1x::openauto::autoapp::ui {
 
     void f1x::openauto::autoapp::ui::HeatingWindow::onCanMessageReceived(const f1x::openauto::autoapp::service::CanMessage& msg) {
         QString dataHex = msg.data.toHex(' ').toUpper();
-        if (msg.id == 210 && msg.data.size() >= 4)
+        if (msg.id == 0x210 && msg.data.size() >= 4)
         {
             bool ok;
             QString firstByteHex = dataHex.left(2);
