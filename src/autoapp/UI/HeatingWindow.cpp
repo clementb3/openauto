@@ -47,7 +47,7 @@ namespace f1x::openauto::autoapp::ui {
         : QWidget(parent), ui_(new Ui::HeatingWindow), configuration_(std::move(configuration)) {
         
         ui_->setupUi(this);
-
+        setupCanService();
         connect(ui_->fanLess, &QPushButton::clicked, this, &HeatingWindow::lessFan);
         connect(ui_->fanMore, &QPushButton::clicked, this, &HeatingWindow::moreFan);
         connect(ui_->tempLeftMore, &QPushButton::clicked, this, &HeatingWindow::moreTempLeft);
