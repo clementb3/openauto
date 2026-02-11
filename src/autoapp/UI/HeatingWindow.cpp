@@ -99,12 +99,15 @@ namespace f1x::openauto::autoapp::ui {
             switch (firstByteHexValue%20)
             {
             case 18:
+                OPENAUTO_LOG(debug) << "[UI heat] 18";
                 changeSeatLeftValue(3);
                 break;
             case 10:
+                OPENAUTO_LOG(debug) << "[UI heat] 10";
                 changeSeatLeftValue(2);
                 break;
             case 8:
+                OPENAUTO_LOG(debug) << "[UI heat] 8";
                 changeSeatLeftValue(1);
                 break;
 			case 0:
