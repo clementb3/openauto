@@ -94,13 +94,22 @@ namespace f1x
 					setupCanService();
 
 					volumeSlider_ = new QWidget(this);
-					volumeSlider_->setFixedSize(10, 1075);
+					volumeSlider_->setFixedSize(10, 1800);
 					volumeSlider_->setStyleSheet(
 						"background-color: #2c3e50;" 
 						"border-radius: 5px;"
 					);
 					volumeSlider_->hide();
 					volumeSlider_->raise();
+
+					volumeValue_ = new QWidget(this);
+					volumeValue_->setFixedSize(10, 900);
+					volumeValue_->setStyleSheet(
+						"background-color: #619bd4;" 
+						"border-radius: 5px;"
+					);
+					volumeValue_->hide();
+					volumeValue_->raise();
 
 					settingsPage_ = new SettingsWindow(configuration, this);
 					heatingWindow_ = new HeatingWindow(configuration, this);
@@ -115,12 +124,18 @@ namespace f1x
 					volumeTimer_ = new QTimer(this);
 					volumeTimer_->setSingleShot(true);
 
+					connect(volumeTimer_, &QTimer::timeout, [this]() {
+						volumeSlider_->hide();
+						volumeValue_->hide();
+						});
+
+
 					connect(ui_->pushButtonHome, &QPushButton::clicked, this, &MainWindow::openHome);
 					connect(ui_->pushButtonSettings, &QPushButton::clicked, this, &MainWindow::openSettings);
 					connect(ui_->pushButtonHeatting, &QPushButton::clicked, this, &MainWindow::openHeating);
-					connect(ui_->pushButtonVolume, &QPushButton::clicked, this, &MainWindow::showVolumeSlider);
 					connect(ui_->pushButtonBluetooth, &QPushButton::clicked, this, &MainWindow::setPairable);
-					connect(volumeButon_, &QPushButton::clicked, this, &MainWindow::showVolume);
+					connect(ui_->plusVolume, &QPushButton::clicked, this, &MainWindow::upVolume);
+					connect(ui_->minusVolume, &QPushButton::clicked, this, &MainWindow::downVolume);
 
 
 					ui_->pushButtonBluetooth->hide();
@@ -308,7 +323,7 @@ void f1x::openauto::autoapp::ui::MainWindow::onCanMessageReceived(const f1x::ope
 	ss << std::hex << std::uppercase << msg.id;
 	std::string idHex = ss.str();
 
-	OPENAUTO_LOG(debug) << "[UI] Message CAN receive ID: " << idHex << "[data="<< dataHex.toStdString() <<"]";
+	OPENAUTO_LOG(debug) << "[UI main] Message CAN receive ID: " << idHex << "[data="<< dataHex.toStdString() <<"]";
 }
 
 void f1x::openauto::autoapp::ui::MainWindow::sendCanMessage(uint32_t idCan, QByteArray data) {
@@ -323,26 +338,36 @@ QWidget* f1x::openauto::autoapp::ui::MainWindow::getVideoWidget() {
 
 void f1x::openauto::autoapp::ui::MainWindow::upVolume() {
 	volumeSlider_->show();
-	volumeSlider_->raise();
-	//volumeSlider_->setValue(volumeSlider_->value() + 5);
-	//onVolumeChanged(volumeSlider_->value());
+	volume = volume + 5;	if (volume > 100)
+	{
+		volume = 100;
+	}
+	changeVolume(volume);
 }
 
 void f1x::openauto::autoapp::ui::MainWindow::downVolume() {
 	volumeSlider_->show();
-	volumeSlider_->raise();
-	//volumeSlider_->setValue(volumeSlider_->value() - 5);
-	//onVolumeChanged(volumeSlider_->value());
+	volume = volume - 5;
+	if (volume<0)
+	{
+		volume = 0;
+	}
+	changeVolume(volume);
 }
 
 void f1x::openauto::autoapp::ui::MainWindow::showVolume() {
 	volumeSlider_->show();
+	volumeValue_->show();
 	volumeSlider_->raise();
+	volumeValue_->raise();
 
 	volumeTimer_->start(3000);
 }
 
-void f1x::openauto::autoapp::ui::MainWindow::onVolumeChanged(int value) {
+void f1x::openauto::autoapp::ui::MainWindow::changeVolume(int value) {
+	showVolume();
+	volumeValue_->move(1070,1800 - 18 * value +100);
+	volumeValue_->setFixedSize(10, value*18);
 	if (volumeTimer_) {
 		volumeTimer_->start(3000);
 	}
@@ -351,13 +376,35 @@ void f1x::openauto::autoapp::ui::MainWindow::onVolumeChanged(int value) {
 	qDebug() << "change volume at :" << value << "%";
 }
 
+int f1x::openauto::autoapp::ui::MainWindow::getVolumeSimple() {
+	char buffer[128];
+	std::string result = "";
+	FILE* pipe = popen("amixer sget Master | grep -Po '\\[\\d+%\\]' | head -1", "r");
+	if (!pipe) return 50;
+
+	while (fgets(buffer, sizeof buffer, pipe) != NULL) {
+		result += buffer;
+	}
+	pclose(pipe);
+
+	if (!result.empty()) {
+		result.erase(std::remove(result.begin(), result.end(), '['), result.end());
+		result.erase(std::remove(result.begin(), result.end(), ']'), result.end());
+		result.erase(std::remove(result.begin(), result.end(), '%'), result.end());
+		return std::stoi(result);
+	}
+	return 0;
+}
 
 void f1x::openauto::autoapp::ui::MainWindow::showEvent(QShowEvent* event) {
 	QWidget::showEvent(event);
-	volumeSlider_->move(this->width()-10, 75);
-	volumeSlider_->raise();
-}
 
+	volumeSlider_->move(1070, 100);
+	volumeValue_->move(1070, 1000);
+
+	int vol = getVolumeSimple();
+	changeVolume(vol);
+}
 
 void f1x::openauto::autoapp::ui::MainWindow::hostModeStateChanged(QBluetoothLocalDevice::HostMode mode)
 {

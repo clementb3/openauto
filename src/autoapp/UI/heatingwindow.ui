@@ -277,87 +277,179 @@
     </layout>
    </item>
    <item>
-    <layout class="QVBoxLayout" name="bouttonHeat">
+    <layout class="QHBoxLayout" name="bouttonHeat">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetDefaultConstraint</enum>
+     </property>
      <item>
-      <layout class="QHBoxLayout" name="bouttonHeatSeat">
+      <layout class="QHBoxLayout" name="HeatControlLeft">
        <item>
-        <widget class="QPushButton" name="airScraftLeft">
-         <property name="text">
-          <string/>
-         </property>
-         <property name="icon">
-          <iconset>
-           <normalon>:/airScraft.png</normalon>
-          </iconset>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>120</width>
-           <height>120</height>
-          </size>
-         </property>
-        </widget>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <widget class="QPushButton" name="airScraftLeft">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normalon>:/airScraft.png</normalon>
+            </iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>90</width>
+             <height>90</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="heatCentreAirscraftLeft">
+           <item>
+            <widget class="QSlider" name="airScraftLeftControl">
+             <property name="minimumSize">
+              <size>
+               <width>50</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QSlider::groove:vertical {
+    border-radius: 5px;                /* Bords arrondis */
+    margin: 0px 5px;
+}
+
+/* La partie déjà &quot;remplie&quot; (Bleu) */
+QSlider::sub-page:vertical {
+background: rgba(200, 200, 200, 50);
+    border-radius: 5px;
+}
+
+/* La partie vide (Gris transparent) */
+QSlider::add-page:vertical {
+    background: #619bd4; 
+
+    border-radius: 5px;
+}
+
+/* Le curseur (Handle) */
+QSlider::handle:vertical {
+    background: #619bd4; 
+    border: 1px solid #619bd4;
+    height: 50px;
+    margin: 0 -5px;                    /* Pour qu'il dépasse un peu du rail */
+    border-radius: 7px;                /* Arrondi */
+}</string>
+             </property>
+             <property name="maximum">
+              <number>3</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="invertedControls">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
        </item>
        <item>
-        <widget class="QPushButton" name="heatSeatLeft">
-         <property name="text">
-          <string/>
-         </property>
-         <property name="icon">
-          <iconset>
-           <normalon>:/seatHeat.png</normalon>
-          </iconset>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>120</width>
-           <height>120</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="airScraftRight">
-         <property name="text">
-          <string/>
-         </property>
-         <property name="icon">
-          <iconset>
-           <normalon>:/seatHeat.png</normalon>
-          </iconset>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>120</width>
-           <height>120</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="heatSeatRight">
-         <property name="text">
-          <string/>
-         </property>
-         <property name="icon">
-          <iconset>
-           <normalon>:/airScraft.png</normalon>
-          </iconset>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>120</width>
-           <height>120</height>
-          </size>
-         </property>
-        </widget>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <widget class="QPushButton" name="heatSeatLeft">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normalon>:/seatHeat.png</normalon>
+            </iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>90</width>
+             <height>90</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="heatCentreSeatLeft">
+           <item>
+            <widget class="QSlider" name="heatSeatLeftControl">
+             <property name="minimumSize">
+              <size>
+               <width>50</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>50</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QSlider::groove:vertical {
+    border-radius: 5px;                /* Bords arrondis */
+    margin: 0px 5px;
+}
+
+/* La partie déjà &quot;remplie&quot; (Bleu) */
+QSlider::sub-page:vertical {
+background: rgba(200, 200, 200, 50);
+    border-radius: 5px;
+}
+
+/* La partie vide (Gris transparent) */
+QSlider::add-page:vertical {
+    background: #619bd4; 
+
+    border-radius: 5px;
+}
+
+/* Le curseur (Handle) */
+QSlider::handle:vertical {
+    background: #619bd4; 
+    border: 1px solid #619bd4;
+    height: 50px;
+    margin: 0 -5px;                    /* Pour qu'il dépasse un peu du rail */
+    border-radius: 7px;                /* Arrondi */
+}</string>
+             </property>
+             <property name="maximum">
+              <number>3</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="invertedAppearance">
+              <bool>false</bool>
+             </property>
+             <property name="invertedControls">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
        </item>
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="bouttonUtilHeat">
+      <layout class="QVBoxLayout" name="BouttonUtilHeat">
        <item>
         <widget class="QPushButton" name="recyclingAirFlow">
+         <property name="minimumSize">
+          <size>
+           <width>360</width>
+           <height>0</height>
+          </size>
+         </property>
          <property name="text">
           <string/>
          </property>
@@ -381,6 +473,24 @@
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>120</width>
+           <height>120</height>
+          </size>
+         </property>
+         <property name="sizeIncrement">
+          <size>
+           <width>120</width>
+           <height>120</height>
+          </size>
+         </property>
+         <property name="baseSize">
+          <size>
+           <width>120</width>
+           <height>120</height>
+          </size>
          </property>
          <property name="font">
           <font>
@@ -430,6 +540,180 @@
           </size>
          </property>
         </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="HeatControlRight">
+       <property name="sizeConstraint">
+        <enum>QLayout::SetDefaultConstraint</enum>
+       </property>
+       <item>
+        <layout class="QVBoxLayout" name="airScraftRightViewControl">
+         <item>
+          <widget class="QPushButton" name="airScraftRight">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normalon>:/seatHeat.png</normalon>
+            </iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>90</width>
+             <height>90</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="heatCentreSeatRight">
+           <item>
+            <widget class="QSlider" name="heatSeatRightControl">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+               <horstretch>20</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>50</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QSlider::groove:vertical {
+    border-radius: 5px;                /* Bords arrondis */
+    margin: 0px 5px;
+}
+
+/* La partie déjà &quot;remplie&quot; (Bleu) */
+QSlider::sub-page:vertical {
+background: rgba(200, 200, 200, 50);
+    border-radius: 5px;
+}
+
+/* La partie vide (Gris transparent) */
+QSlider::add-page:vertical {
+    background: #619bd4; 
+
+    border-radius: 5px;
+}
+
+/* Le curseur (Handle) */
+QSlider::handle:vertical {
+    background: #619bd4; 
+    border: 1px solid #619bd4;
+    height: 50px;
+    margin: 0 -5px;                    /* Pour qu'il dépasse un peu du rail */
+    border-radius: 7px;                /* Arrondi */
+}</string>
+             </property>
+             <property name="minimum">
+              <number>0</number>
+             </property>
+             <property name="maximum">
+              <number>3</number>
+             </property>
+             <property name="value">
+              <number>0</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="invertedControls">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="heatSeatRightViewControl">
+         <item>
+          <widget class="QPushButton" name="heatSeatRight">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normalon>:/airScraft.png</normalon>
+            </iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>90</width>
+             <height>90</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="heatCentreAirscraftRight">
+           <item>
+            <widget class="QSlider" name="airScraftRightControl">
+             <property name="minimumSize">
+              <size>
+               <width>50</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="sizeIncrement">
+              <size>
+               <width>20</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QSlider::groove:vertical {
+    border-radius: 5px;                /* Bords arrondis */
+    margin: 0px 5px;
+}
+
+/* La partie déjà &quot;remplie&quot; (Bleu) */
+QSlider::sub-page:vertical {
+background: rgba(200, 200, 200, 50);
+    border-radius: 5px;
+}
+
+/* La partie vide (Gris transparent) */
+QSlider::add-page:vertical {
+    background: #619bd4; 
+
+    border-radius: 5px;
+}
+
+/* Le curseur (Handle) */
+QSlider::handle:vertical {
+    background: #619bd4; 
+    border: 1px solid #619bd4;
+    height: 50px;
+    margin: 0 -5px;                    /* Pour qu'il dépasse un peu du rail */
+    border-radius: 7px;                /* Arrondi */
+}</string>
+             </property>
+             <property name="maximum">
+              <number>3</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="invertedAppearance">
+              <bool>false</bool>
+             </property>
+             <property name="invertedControls">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
        </item>
       </layout>
      </item>

@@ -18,6 +18,11 @@
 #include <fstream>
 #include <string>
 #include <f1x/openauto/autoapp/UI/HeatingWindow.hpp>
+#include <qobject.h>
+#include <bits/stdint-uintn.h>
+#include <qglobal.h>
+#include <qendian.h>
+#include <sstream>
 #include <QBluetoothLocalDevice>
 #include <QBluetoothHostInfo>
 #include <QComboBox>
@@ -34,7 +39,7 @@
 #include <QTextStream>
 #include <QTimer>
 #include "ui_heatingwindow.h"
-
+#include <cmath>
 
 namespace f1x::openauto::autoapp::ui {
 
@@ -49,6 +54,10 @@ namespace f1x::openauto::autoapp::ui {
         connect(ui_->tempLeftLess, &QPushButton::clicked, this, &HeatingWindow::lessTempLeft);
         connect(ui_->tempRightMore, &QPushButton::clicked, this, &HeatingWindow::moreTempRight);
         connect(ui_->tempRightLess, &QPushButton::clicked, this, &HeatingWindow::lessTempRight);
+        connect(ui_->heatSeatLeftControl, &QSlider::valueChanged, this, &HeatingWindow::sendValueSeatLeftValue);
+        connect(ui_->airScraftLeftControl, &QSlider::valueChanged, this, &HeatingWindow::sendValueAriscarfLeftValue);
+        connect(ui_->heatSeatRightControl, &QSlider::valueChanged, this, &HeatingWindow::sendValueSeatRightValue);
+        connect(ui_->airScraftRightControl, &QSlider::valueChanged, this, &HeatingWindow::sendValueAriscarfRightValue);
 
     }
 
@@ -56,6 +65,145 @@ namespace f1x::openauto::autoapp::ui {
     {
         delete ui_;
     }
+
+    void f1x::openauto::autoapp::ui::HeatingWindow::setupCanService() {
+        qRegisterMetaType<f1x::openauto::autoapp::service::CanMessage>("CanMessage");
+        m_canThread = new QThread(this);
+        m_canService = new f1x::openauto::autoapp::service::CanService();
+
+        if (m_canService->init("can0")) {
+            m_canService->moveToThread(m_canThread);
+
+            connect(m_canThread, &QThread::started, m_canService, &f1x::openauto::autoapp::service::CanService::process);
+            connect(m_canService, &f1x::openauto::autoapp::service::CanService::messageReceived,
+                this, &HeatingWindow::onCanMessageReceived);
+            connect(m_canThread, &QThread::finished, m_canService, &QObject::deleteLater);
+
+            m_canThread->start();
+        }
+    }
+
+    void f1x::openauto::autoapp::ui::HeatingWindow::onCanMessageReceived(const f1x::openauto::autoapp::service::CanMessage& msg) {
+        QString dataHex = msg.data.toHex(' ').toUpper();
+        if (msg.id == 210 && msg.data.size() >= 4)
+        {
+            bool ok;
+            QString firstByteHex = dataHex.left(2);
+            int firstByteHexValue = firstByteHex.toInt(&ok, 16);
+            QString secondByteHex = dataHex.section(' ', 1, 1);
+            int secondByteHexValue = firstByteHex.toInt(&ok, 16);
+            switch (firstByteHexValue%20)
+            {
+            case 18:
+                changeSeatLeftValue(3);
+                break;
+            case 10:
+                changeSeatLeftValue(2);
+                break;
+            case 8:
+                changeSeatLeftValue(1);
+                break;
+			case 0:
+                changeSeatLeftValue(0);
+                break;
+            }
+            int arrondi = std::floor(firstByteHexValue / 20);
+            switch (arrondi)
+            {
+            case 3:
+                changeAriscarfLeftValue(3);
+                break;
+            case 2:
+                changeAriscarfLeftValue(2);
+                break;
+            case 1:
+                changeAriscarfLeftValue(1);
+                break;
+			case 0:
+                changeAriscarfLeftValue(0);
+                break;
+            }
+
+            switch (secondByteHexValue %20)
+            {
+            case 18:
+                changeSeatRightValue(3);
+                break;
+            case 10:
+                changeSeatRightValue(2);
+                break;
+            case 8:
+                changeSeatRightValue(1);
+                break;
+			case 0:
+                changeSeatRightValue(0);
+                break;
+            }
+            arrondi = std::floor(secondByteHexValue / 20);
+            switch (arrondi)
+            {
+            case 3:
+                changeAriscarfRightValue(3);
+                break;
+            case 2:
+                changeAriscarfRightValue(2);
+                break;
+            case 1:
+                changeAriscarfRightValue(1);
+                break;
+			case 0:
+                changeAriscarfRightValue(0);
+                break;
+            }
+        }
+
+        std::stringstream ss;
+        ss << std::hex << std::uppercase << msg.id;
+        std::string idHex = ss.str();
+
+        OPENAUTO_LOG(debug) << "[UI heat] Message CAN receive ID: " << idHex << "[data=" << dataHex.toStdString() << "]";
+    }
+
+
+    void f1x::openauto::autoapp::ui::HeatingWindow::sendCanMessage(uint32_t idCan, QByteArray data) {
+        if (m_canService) {
+            m_canService->sendMessage(idCan, data);
+        }
+    }
+
+    void f1x::openauto::autoapp::ui::HeatingWindow::changeSeatLeftValue(int value){
+		ui_->heatSeatLeftControl->setValue(value);
+    }
+
+    void f1x::openauto::autoapp::ui::HeatingWindow::changeAriscarfLeftValue(int value){
+		ui_->airScraftLeftControl->setValue(value);
+    }
+
+    void f1x::openauto::autoapp::ui::HeatingWindow::changeSeatRightValue(int value){
+        ui_->heatSeatRightControl->setValue(value);
+    }
+
+    void f1x::openauto::autoapp::ui::HeatingWindow::changeAriscarfRightValue(int value){
+        ui_->airScraftRightControl->setValue(value);
+    }
+
+
+    void f1x::openauto::autoapp::ui::HeatingWindow::sendValueSeatLeftValue(int value){
+        sendCanMessage(0x02C, QByteArray::fromHex("00 00 08 00"));
+    }
+
+    void f1x::openauto::autoapp::ui::HeatingWindow::sendValueAriscarfLeftValue(int value){
+        sendCanMessage(0x02C, QByteArray::fromHex("00 00 02 00"));
+    }
+
+    void f1x::openauto::autoapp::ui::HeatingWindow::sendValueSeatRightValue(int value){
+        sendCanMessage(0x02C, QByteArray::fromHex("00 00 80 00"));
+    }
+
+    void f1x::openauto::autoapp::ui::HeatingWindow::sendValueAriscarfRightValue(int value){
+        sendCanMessage(0x02C, QByteArray::fromHex("00 00 20 00"));
+    }
+
 
     void HeatingWindow::moreFan() {
         QString command = QString("crankshaft-heating fan %1 &").arg(fanSpeed);

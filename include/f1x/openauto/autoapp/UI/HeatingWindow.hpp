@@ -18,8 +18,11 @@
 
 #pragma once
 
-#include <QWidget>
 #include <f1x/openauto/autoapp/Configuration/IConfiguration.hpp>
+#include <f1x/openauto/autoapp/Service/Can/CanService.hpp>
+#include <qthread.h>
+
+#include <QWidget>
 #include <QFileDialog>
 #include <QComboBox>
 #include <QKeyEvent>
@@ -53,6 +56,19 @@ namespace f1x::openauto::autoapp::ui
 		void lessTempLeft();
 		void moreTempRight();
 		void lessTempRight();
+		void setupCanService();
+		void onCanMessageReceived(const f1x::openauto::autoapp::service::CanMessage& msg);
+		void sendCanMessage(uint32_t idCan, QByteArray data);
+
+		void changeSeatLeftValue(int value);
+		void changeAriscarfLeftValue(int value);
+		void changeSeatRightValue(int value);
+		void changeAriscarfRightValue(int value);
+
+		void sendValueSeatLeftValue(int value);
+		void sendValueAriscarfLeftValue(int value);
+		void sendValueSeatRightValue(int value);
+		void sendValueAriscarfRightValue(int value);
 
 	private:
 		Ui::HeatingWindow* ui_;
@@ -60,5 +76,8 @@ namespace f1x::openauto::autoapp::ui
 		int fanSpeed = 0;
 		int seatTempLeft = 22;
 		int seatTempRight = 22;
+
+		f1x::openauto::autoapp::service::CanService* m_canService;
+		QThread* m_canThread;
 	};
 }

@@ -125,7 +125,7 @@ private slots:
     void openHeating();
 	void openHome();
     void showVolume();
-    void onVolumeChanged(int value);
+    void changeVolume(int value);
 
     void on_positionChanged(qint64 position);
     void on_StateChanged(QMediaPlayer::State state);
@@ -146,6 +146,7 @@ private:
 	void setupCanService();
     void onCanMessageReceived(const f1x::openauto::autoapp::service::CanMessage& msg);
     void sendCanMessage(uint32_t idCan, QByteArray data);
+    static int getVolumeSimple();
 
 public:
     int getTabWidgetIndex();
@@ -155,7 +156,7 @@ private:
     SettingsWindow *settingsPage_;
     HeatingWindow *heatingWindow_;
 
-    QPushButton *volumeButon_;
+    QWidget* volumeValue_;
     QWidget* volumeSlider_;
 
     QTimer* volumeTimer_;
@@ -262,7 +263,7 @@ private:
 
     int camera_ycorection;
     int camera_zoom;
-
+    int volume = 50;
     QBluetoothLocalDevice *localDevice;
 
     f1x::openauto::autoapp::service::CanService *m_canService;
