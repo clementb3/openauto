@@ -92,6 +92,8 @@ namespace f1x::openauto::autoapp::ui {
             int firstByteHexValue = firstByteHex.toInt(&ok, 16);
             QString secondByteHex = dataHex.section(' ', 1, 1);
             int secondByteHexValue = firstByteHex.toInt(&ok, 16);
+			OPENAUTO_LOG(debug) << "[UI heat] First byte hex value: " << firstByteHexValue;
+			OPENAUTO_LOG(debug) << "[UI heat] Econd byte hex value: " << secondByteHex;
             switch (firstByteHexValue%20)
             {
             case 18:
