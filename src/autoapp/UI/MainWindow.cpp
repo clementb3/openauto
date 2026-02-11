@@ -92,24 +92,12 @@ namespace f1x
 
 					ui_->setupUi(this);
 					setupCanService();
-					volumeButon_ = new QPushButton("", this);
-					volumeButon_->setFixedSize(80, 80);
-					volumeButon_->setFlat(true);
-					volumeButon_->setAttribute(Qt::WA_TranslucentBackground);
-					QIcon icon(":/sound.png");
-					volumeButon_->setIcon(icon);
-					volumeButon_->setIconSize(QSize(48, 48)); // Ajuste la taille de l'image
-					volumeButon_->setStyleSheet("background-color: rgba(132, 149, 169, 50); color: white; border-radius: 40px;");
-					volumeButon_->show();
-					volumeButon_->raise();
 
-					volumeSlider_ = new QSlider(Qt::Vertical, this);
-					volumeSlider_->setRange(0, 100);
-					volumeSlider_->setFixedSize(80, 400);
+					volumeSlider_ = new QWidget(this);
+					volumeSlider_->setFixedSize(10, 1075);
 					volumeSlider_->setStyleSheet(
-						"QSlider::groove:vertical { background: rgba(132, 149, 169, 50); width: 80px; border-radius: 5px; }"
-						"QSlider::handle:vertical { background: rgb(132, 149, 169); height: 80px; margin: 0 -10px; border-radius: 15px; }"
-						"QSlider::add-page:vertical { background: rgb(132, 149, 169); border-radius: 5px; }"
+						"background-color: #2c3e50;" 
+						"border-radius: 5px;"
 					);
 					volumeSlider_->hide();
 					volumeSlider_->raise();
@@ -127,16 +115,11 @@ namespace f1x
 					volumeTimer_ = new QTimer(this);
 					volumeTimer_->setSingleShot(true);
 
-					connect(volumeTimer_, &QTimer::timeout, [this]() {
-						volumeSlider_->hide();
-						});
-
 					connect(ui_->pushButtonHome, &QPushButton::clicked, this, &MainWindow::openHome);
 					connect(ui_->pushButtonSettings, &QPushButton::clicked, this, &MainWindow::openSettings);
 					connect(ui_->pushButtonHeatting, &QPushButton::clicked, this, &MainWindow::openHeating);
 					connect(ui_->pushButtonVolume, &QPushButton::clicked, this, &MainWindow::showVolumeSlider);
 					connect(ui_->pushButtonBluetooth, &QPushButton::clicked, this, &MainWindow::setPairable);
-					connect(volumeSlider_, &QSlider::valueChanged, this, &MainWindow::onVolumeChanged);
 					connect(volumeButon_, &QPushButton::clicked, this, &MainWindow::showVolume);
 
 
@@ -201,7 +184,7 @@ namespace f1x
 					if (std::ifstream("/boot/crankshaft/volume")) {
 						// init volume
 						QString vol = QString::number(configuration_->readFileContent("/boot/crankshaft/volume").toInt());
-						volumeSlider_->setValue(vol.toInt());
+						//volumeSlider_->setValue(vol.toInt());
 					}
 
 
@@ -341,15 +324,15 @@ QWidget* f1x::openauto::autoapp::ui::MainWindow::getVideoWidget() {
 void f1x::openauto::autoapp::ui::MainWindow::upVolume() {
 	volumeSlider_->show();
 	volumeSlider_->raise();
-	volumeSlider_->setValue(volumeSlider_->value() + 5);
-	onVolumeChanged(volumeSlider_->value());
+	//volumeSlider_->setValue(volumeSlider_->value() + 5);
+	//onVolumeChanged(volumeSlider_->value());
 }
 
 void f1x::openauto::autoapp::ui::MainWindow::downVolume() {
 	volumeSlider_->show();
 	volumeSlider_->raise();
-	volumeSlider_->setValue(volumeSlider_->value() - 5);
-	onVolumeChanged(volumeSlider_->value());
+	//volumeSlider_->setValue(volumeSlider_->value() - 5);
+	//onVolumeChanged(volumeSlider_->value());
 }
 
 void f1x::openauto::autoapp::ui::MainWindow::showVolume() {
@@ -371,9 +354,7 @@ void f1x::openauto::autoapp::ui::MainWindow::onVolumeChanged(int value) {
 
 void f1x::openauto::autoapp::ui::MainWindow::showEvent(QShowEvent* event) {
 	QWidget::showEvent(event);
-	volumeButon_->move(15, this->height() / 2 + 210);
-	volumeSlider_->move(15, this->height() / 2 - 200);
-	volumeButon_->raise();
+	volumeSlider_->move(this->width()-10, 75);
 	volumeSlider_->raise();
 }
 

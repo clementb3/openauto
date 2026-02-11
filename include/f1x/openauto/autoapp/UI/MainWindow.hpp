@@ -156,7 +156,7 @@ private:
     HeatingWindow *heatingWindow_;
 
     QPushButton *volumeButon_;
-    QSlider* volumeSlider_;
+    QWidget* volumeSlider_;
 
     QTimer* volumeTimer_;
 
