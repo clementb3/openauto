@@ -92,30 +92,28 @@ namespace f1x::openauto::autoapp::ui {
             int firstByteHexValue = firstByteHex.toInt(&ok, 16);
 
             QString secondByteHex = dataHex.section(' ', 1, 1);
-            int secondByteHexValue = firstByteHex.toInt(&ok, 16);
+            int secondByteHexValue = secondByteHex.toInt(&ok, 16);
 
-			OPENAUTO_LOG(debug) << "[UI heat] First byte hex value : " << firstByteHex.toStdString();
-			OPENAUTO_LOG(debug) << "[UI heat] Econd byte hex value : " << secondByteHex.toStdString();
-            switch (firstByteHexValue%20)
+            switch (firstByteHexValue%0x20)
             {
-            case 18:
+            case 0x18:
                 OPENAUTO_LOG(debug) << "[UI heat] 18";
                 changeSeatLeftValue(3);
                 break;
-            case 10:
+            case 0x10:
                 OPENAUTO_LOG(debug) << "[UI heat] 10";
                 changeSeatLeftValue(2);
                 break;
-            case 8:
+            case 0x8:
                 OPENAUTO_LOG(debug) << "[UI heat] 8";
                 changeSeatLeftValue(1);
                 break;
-			case 0:
+			case 0x0:
                 changeSeatLeftValue(0);
                 break;
             }
-            int arrondi = std::floor(firstByteHexValue / 20);
-            switch (arrondi)
+            int arrondiFirst = std::floor(firstByteHexValue / 0x20);
+            switch (arrondiFirst)
             {
             case 3:
                 changeAriscarfLeftValue(3);
@@ -131,23 +129,23 @@ namespace f1x::openauto::autoapp::ui {
                 break;
             }
 
-            switch (secondByteHexValue %20)
+            switch (secondByteHexValue % 0x20)
             {
-            case 18:
+            case 0x18:
                 changeSeatRightValue(3);
                 break;
-            case 10:
+            case 0x10:
                 changeSeatRightValue(2);
                 break;
-            case 8:
+            case 0x8:
                 changeSeatRightValue(1);
                 break;
-			case 0:
+			case 0x0:
                 changeSeatRightValue(0);
                 break;
             }
-            arrondi = std::floor(secondByteHexValue / 20);
-            switch (arrondi)
+            int arrondiSecond = std::floor(secondByteHexValue / 0x20);
+            switch (arrondiSecond)
             {
             case 3:
                 changeAriscarfRightValue(3);
