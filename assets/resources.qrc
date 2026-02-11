@@ -49,6 +49,8 @@
         <file>defoggingRear.png</file>
         <file>defoggingFront.png</file>
         <file>recyclingAirFlow.png</file>
-	<file>sound.png</file>
+	<file>sound.png</file>	
+        <file>plus.png</file>
+	<file>minus.png</file>
     </qresource>
 </RCC>

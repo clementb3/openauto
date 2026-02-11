@@ -8,12 +8,10 @@
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/out/build/${presetName}",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_BUILD_TYPE": "Release",
         "CMAKE_AUTOMOC": "ON",
         "CMAKE_AUTOUIC": "ON",
-        "CMAKE_AUTORCC": "ON",
-        "RPI_BUILD": "OFF",
-        "NOPI": "ON"
+        "CMAKE_AUTORCC": "ON"
       },
       "vendor": {
         "microsoft.com/VisualStudioSettings/CMake/1.0": {
@@ -39,7 +37,7 @@
   ],
   "vendor": {
     "qt-project.org/Presets": {
-      "checksum": "Zdf6/VnWwdfqwEXxKeROvjU/fHA="
+      "checksum": "yPdYvqFjULQTnbuipoiVjtj98WE="
     }
   }
 }
