@@ -309,10 +309,21 @@ void f1x::openauto::autoapp::ui::MainWindow::onCanMessageReceived(const f1x::ope
 		switch (command)
 		{
 			case 0x03100000:
-				downVolume();
+				volumeSlider_->show();
+				volume = volume + 2;	if (volume > 100)
+				{
+					volume = 100;
+				}
+				changeVolume(volume);				
 				break;
 			case 0x03200000:
-				upVolume();
+				volumeSlider_->show();
+				volume = volume - 2;
+				if (volume < 0)
+				{
+					volume = 0;
+				}
+				changeVolume(volume);				
 				break;
 		default:
 			break;
